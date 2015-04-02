@@ -1,0 +1,31 @@
+{
+  "name": "dat-visualdiff",
+  "version": "1.0.0",
+  "description": "a visual differ for dat",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/karissa/dat-visualdiff.git"
+  },
+  "keywords": [
+    "diff",
+    "visual",
+    "data",
+    "tabular",
+    "dat"
+  ],
+  "author": "Karissa McKelvey <karissa@karissamck.com> (http://karissamck.com/)",
+  "license": "BSD",
+  "bugs": {
+    "url": "https://github.com/karissa/dat-visualdiff/issues"
+  },
+  "homepage": "https://github.com/karissa/dat-visualdiff",
+  "dependencies": {
+    "daff": "^1.2.6",
+    "dat-core": "0.0.1",
+    "rimraf": "^2.3.2"
+  }
+}
