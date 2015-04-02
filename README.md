@@ -1,2 +1,2 @@
 # dat-visualdiff
-A visual differ for tabular data
+A visual differ for use with DAT
