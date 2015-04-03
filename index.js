@@ -15,8 +15,8 @@ datVisualDiff.prototype.changes2html = function (changesStream, cb) {
 
   changesStream.pipe(through.obj(function (change) {
     console.log('sup')
-    ndjson1.concat(JSON.stringify(change.changes[0].row))
-    ndjson2.concat(JSON.stringify(change.changes[1].row))
+    ndjson1.concat(JSON.stringify(change.changes[0].row) + '\n')
+    ndjson2.concat(JSON.stringify(change.changes[1].row) + '\n')
   }))
 
   changesStream.on('end', function () {

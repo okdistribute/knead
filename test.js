@@ -38,6 +38,8 @@ TEST_DATA = [
   }
 ]
 
+var TEST_STREAM = //MAKE A TEST STREAM HERE WITH THE ABOVE DATA....
+
 createConflicts(function (branches) {
   var datDiffer = new visualdiff(db)
   datDiffer.changes2html(TEST_STREAM, function (html) {
