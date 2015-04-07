@@ -1,56 +1,27 @@
 var dat = require('dat-core')
 var rimraf = require('rimraf')
+var tape = require('tape')
 var visualdiff = require('./index.js')
-var JSONStream = require('JSONStream')
+var testData = require('./testData.js')
 
 rimraf.sync('./testdb')
 var db = dat('./testdb')
 
-
-TEST_DATA = [
-  {
-    key: 'asdb32',
-    changes: [
-      { 'branch': 'branchA', row: {country: 'ireland', captial: 'dublin'}},
-      { 'branch': 'branchB', row: {country: 'ireland', code: 'ie', capital: 'dublin'}},
-    ],
-  },
-  {
-    key: 'asdb32',
-    changes: [
-      { 'branch': 'branchA', row: {country: 'france', captial: 'paris'}},
-      { 'branch': 'branchB', row: {country: 'france', code: 'fr', capital: 'paris'}},
-    ],
-  },
-  {
-    key: 'nbndf2',
-    changes: [
-      { 'branch': 'branchA', row: {country: 'spain', capital: 'madrid'}},
-      { 'branch': 'branchB', row: {country: 'spain', code: 'es', capital: 'barcelona'}}
-    ],
-  },
-  {
-    key: 'nbndf2',
-    changes: [
-      { 'branch': 'branchA', row: null},
-      { 'branch': 'branchB', row: {country: 'germany', code: 'de', capital: 'berlin'}}
-    ],
-  }
-]
-
-var TEST_STREAM = //MAKE A TEST STREAM HERE WITH THE ABOVE DATA....
-
 createConflicts(function (branches) {
-  var datDiffer = new visualdiff(db)
-  datDiffer.changes2html(TEST_STREAM, function (html) {
-    console.log(html)
-  })
-})
+  console.log(branches)
+  var table1 = db.checkout(branches[0])
+  var table2 = db.checkout(branches[1])
 
-// createConflicts(function (branches) {
-//   var datDiffer = new visualdiff(db)
-//   var html = datDiffer.diff2html()
-// })
+  table1.createReadStream().on('data', function (data) {
+    console.log('table1', data)
+  })
+  table2.createReadStream().on('data', function (data)  {
+    console.log('table2', data)
+  })
+  // visualdiff.ndjson2html(ndjson1, ndjson2, function (html) {
+  //   console.log(html)
+  // })
+})
 
 
 function createConflicts(cb) {

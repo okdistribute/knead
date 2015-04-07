@@ -9,24 +9,9 @@ function datVisualDiff (dat) {
   this.dat = dat
 }
 
-datVisualDiff.prototype.changes2html = function (changesStream, cb) {
-  var ndjson1 = ''
-  var ndjson2 = ''
-
-  changesStream.pipe(through.obj(function (change) {
-    console.log('sup')
-    ndjson1.concat(JSON.stringify(change.changes[0].row) + '\n')
-    ndjson2.concat(JSON.stringify(change.changes[1].row) + '\n')
-  }))
-
-  changesStream.on('end', function () {
-    ndjson2html(ndjson1, ndjson2, cb)
-  })
-}
-
-datVisualDiff.prototype.ndjson2html = function (ndjson1, ndjson2, cb) {
-  var data1 = new daff.SimpleTable(0,0)
-  var data2 = new daff.SimpleTable(0,0)
+datVisualDiff.ndjson2html = function (ndjson1, ndjson2, cb) {
+  var data1 = new daff.SimpleView([])
+  var data2 = new daff.SimpleView([])
 
   var table1 = new daff.Ndjson(data1)
   var table2 = new daff.Ndjson(data2)
@@ -50,7 +35,18 @@ datVisualDiff.prototype.ndjson2html = function (ndjson1, ndjson2, cb) {
 
 }
 
-datVisualDiff.prototype.diff2html = function (branches) {
-  var stream = this.dat.compare(branches)
-  return this.changes2html(stream)
-}
+
+// datVisualDiff.changes2html = function (changesStream, cb) {
+//   var ndjson1 = ''
+//   var ndjson2 = ''
+
+//   changesStream.pipe(through.obj(function (change) {
+//     ndjson1.concat(JSON.stringify(change.changes[0].row) + '\n')
+//     ndjson2.concat(JSON.stringify(change.changes[1].row) + '\n')
+//   }))
+
+//   changesStream.on('end', function () {
+//     ndjson2html(ndjson1, ndjson2, cb)
+//   })
+// }
+
