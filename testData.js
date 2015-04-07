@@ -1,4 +1,4 @@
-TEST_DATA = [
+var TEST_DATA = [
   {
     key: 'asdb32',
     changes: [
@@ -29,7 +29,9 @@ TEST_DATA = [
   }
 ]
 
+var TEST_STREAM // TODO
+
 module.exports = {
   json: TEST_DATA,
-//  stream: TEST_STREAM
+  stream: TEST_STREAM
 }
