@@ -10,9 +10,13 @@ rimraf.sync('./testdb')
 var db = dat('./testdb')
 var oldHash = null
 
+
+
+
+
 createSimpleConflicts(function (branches) {
   console.log(branches)
-  var table1 = db.checkout(branches[0])
+  var table1 = db.checkout(oldHash)
   var table2 = db.checkout(branches[1])
 
   table1.createReadStream().on('data', function (data) {
@@ -21,7 +25,6 @@ createSimpleConflicts(function (branches) {
   table2.createReadStream().on('data', function (data)  {
     console.log('table2', data)
   })
-
 })
 
 function createSimpleConflicts (cb) {
