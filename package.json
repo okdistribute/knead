@@ -31,6 +31,7 @@
     "rimraf": "^2.3.2"
   },
   "devDependencies": {
+    "from2": "^1.3.0",
     "memdb": "^0.2.0",
     "tape": "^4.0.0"
   }

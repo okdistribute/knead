@@ -1,4 +1,6 @@
-var TEST_DATA = [
+module.exports = {}
+
+module.exports.CHANGES = [
   {
     key: 'asdb32',
     changes: [
@@ -29,9 +31,16 @@ var TEST_DATA = [
   }
 ]
 
-var TEST_STREAM // TODO
+module.exports.TABLE_0 =  [{country: 'germany'},
+                {country: 'ireland'},
+                {country: 'france'}]
 
-module.exports = {
-  json: TEST_DATA,
-  stream: TEST_STREAM
-}
+module.exports.TABLE_1 = [{country: 'ireland', captial: 'dublin'},
+               {country: 'france', captial: 'paris'},
+               {country: 'spain', capital: 'madrid'}]
+
+module.exports.TABLE_2 =  [{country: 'germany', code: 'de', capital: 'berlin'},
+                {country: 'ireland', code: 'ie', capital: 'dublin'},
+                {country: 'france', code: 'fr', capital: 'paris'},
+                {country: 'spain', code: 'es', capital: 'barcelona'}]
+
