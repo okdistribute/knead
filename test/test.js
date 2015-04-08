@@ -4,7 +4,7 @@ var tape = require('tape')
 var concat = require('concat')
 var from2 = require('from2')
 
-var visualdiff = require('./index.js')
+var visualdiff = require('../index.js')
 var testData = require('./testData.js')
 var memdb = require('memdb')
 
