@@ -5,18 +5,13 @@ var concat = require('concat')
 
 var visualdiff = require('./index.js')
 var testData = require('./testData.js')
+var memdb = require('memdb')
 
-rimraf.sync('./testdb')
-var db = dat('./testdb')
-var oldHash = null
-
-
-
-
+var db = dat(memdb(), {valueEncoding: 'utf-8'})
 
 createSimpleConflicts(function (branches) {
   console.log(branches)
-  var table1 = db.checkout(oldHash)
+  var table1 = db.checkout(branches[0])
   var table2 = db.checkout(branches[1])
 
   table1.createReadStream().on('data', function (data) {
@@ -34,7 +29,7 @@ function createSimpleConflicts (cb) {
       var oldDb = db.checkout(oldHash)
 
       oldDb.put('hello', 'mars', function (err) {
-        oldDb.branches('default', function (err, branches) {
+        db.heads(function (err, branches) {
           cb(branches)
         })
       })
@@ -51,7 +46,7 @@ function createTableConflicts (cb) {
   //
 }
 
-  //   visualdiff.ndjson2html(ndjson1, ndjson2, function (html) {
-  //     console.log(html)
-  //   })
+//   visualdiff.ndjson2html(ndjson1, ndjson2, function (html) {
+//     console.log(html)
+//   })
 
