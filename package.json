@@ -24,9 +24,12 @@
   },
   "homepage": "https://github.com/karissa/dat-visualdiff",
   "dependencies": {
+    "byte-stream": "^2.1.0",
     "concat": "^1.0.0",
-    "daff": "^1.2.6",
-    "debug": "^2.1.3"
+    "daff": "^1.2.9",
+    "debug": "^2.1.3",
+    "minimist": "^1.1.1",
+    "through2": "^0.6.5"
   },
   "devDependencies": {
     "dat-core": "0.0.4",

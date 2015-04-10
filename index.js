@@ -1,60 +1,43 @@
 var dat = require('dat-core')
 var daff = require('daff')
 var debug = require('debug')('daff.visualdiff')
-var through = require('through2')
+var NdjsonTable = require('./ndjson_table_view.js')
 
 module.exports = datVisualDiff
 
-function Row (obj) {
+var flags = new daff.CompareFlags();
+flags.allow_nested_cells = true;
 
+function datVisualDiff (changes, opts) {
+  if (!opts) opts = {}
+  var table1 = new NdjsonTable(changes, function(row) {
+      return row["versions"][0]["row"];
+  });
+
+  var table2 = new NdjsonTable(changes, function(row) {
+      return row["versions"][1]["row"];
+  });
+
+
+  var alignment = daff.compareTables(table1, table2, flags).align();
+  var highlighter = new daff.TableDiff(alignment,flags);
+  var table_diff = new daff.SimpleTable();
+  highlighter.hilite(table_diff);
+
+  if (opts.html) {
+    var diff2html = new daff.DiffRender();
+    diff2html.render(table_diff);
+    var table_diff_html = diff2html.html();
+    return table_diff_html
+  }
+  return table_diff
 }
+
 
 function Table (obj) {
 
 }
 
-function datVisualDiff (dat) {
-  this.dat = dat
-}
-
-datVisualDiff.ndjson2html = function (ndjson1, ndjson2, cb) {
-  var data1 = new daff.SimpleView([])
-  var data2 = new daff.SimpleView([])
-
-  var table1 = new daff.Ndjson(data1)
-  var table2 = new daff.Ndjson(data2)
-  table1.parse(ndjson1)
-  table2.parse(ndjson2)
-  var alignment = daff.compareTables(table1,table2).align();
-
-  var data_diff = [];
-  var table_diff = new daff.TableView(data_diff);
-  var flags = new daff.CompareFlags();
-  var highlighter = new daff.TableDiff(alignment,flags);
-
-  debug('highlighter', highlighter)
-  highlighter.hilite(table_diff);
-  var diff2html = new daff.DiffRender();
-  debug('table_diff', table_diff)
-
-  diff2html.render(table_diff);
-  var table_diff_html = diff2html.html();
-  cb(table_diff_html)
+function keep (branch, row) {
 
 }
-
-
-// datVisualDiff.changes2html = function (changesStream, cb) {
-//   var ndjson1 = ''
-//   var ndjson2 = ''
-
-//   changesStream.pipe(through.obj(function (change) {
-//     ndjson1.concat(JSON.stringify(change.changes[0].row) + '\n')
-//     ndjson2.concat(JSON.stringify(change.changes[1].row) + '\n')
-//   }))
-
-//   changesStream.on('end', function () {
-//     ndjson2html(ndjson1, ndjson2, cb)
-//   })
-// }
-
