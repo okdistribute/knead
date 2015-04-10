@@ -1,24 +1,42 @@
 var dat = require('dat-core')
 var daff = require('daff')
 var debug = require('debug')('daff.visualdiff')
-var NdjsonTable = require('./ndjson_table_view.js')
+var batcher = require('byte-stream')
+var through = require('through2')
 
-module.exports = datVisualDiff
+var NdjsonTable = require('./lib/ndjson_table_view.js')
+
+module.exports = {}
 
 var flags = new daff.CompareFlags();
 flags.allow_nested_cells = true;
 
-function datVisualDiff (changes, opts) {
+function visualdiff(diffStream, opts, cb) {
+  var batchedStream = batcher(10)
+  diffStream
+    .pipe(batchedStream)
+    .pipe(through.obj(function (data, enc, next) {
+      var daff = toDaff(data, opts)
+      console.log(daff)
+      //cb(null, merges, next)
+    }))
+}
+
+function toDaff (changes, opts) {
   if (!opts) opts = {}
+
   var table1 = new NdjsonTable(changes, function(row) {
-      return row["versions"][0]["row"];
+    console.log(row)
+    if (row) return row[0]["row"]
+    else return null
   });
 
   var table2 = new NdjsonTable(changes, function(row) {
-      return row["versions"][1]["row"];
+    if (row) return row[1]["row"]
+    else return null
   });
 
-
+//  console.log(table1, table2)
   var alignment = daff.compareTables(table1, table2, flags).align();
   var highlighter = new daff.TableDiff(alignment,flags);
   var table_diff = new daff.SimpleTable();
@@ -33,11 +51,4 @@ function datVisualDiff (changes, opts) {
   return table_diff
 }
 
-
-function Table (obj) {
-
-}
-
-function keep (branch, row) {
-
-}
+module.exports = visualdiff
