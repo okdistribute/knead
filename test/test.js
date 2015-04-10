@@ -15,12 +15,10 @@ createTableConflicts(function (branches) {
   var table1 = db.checkout(branches[0])
   var table2 = db.checkout(branches[1])
 
-  table1.createReadStream().on('data', function (data) {
-    console.log('table1', data)
-  })
-  table2.createReadStream().on('data', function (data)  {
-    console.log('table2', data)
-  })
+  var stream = db.createDiffStream(branches[0], branches[1])
+
+  stream.on('data', console.log)
+
 })
 
 
@@ -44,16 +42,6 @@ function putFromTable (db, data, i, cb) {
     putFromTable(db, data, i+1, cb)
   })
 }
-
-function list2stream (data) {
-  var since = 0
-  return from2.obj(function(size, cb) {
-    if (since > data.length) return
-    since++
-    cb(null, data[since])
-  })
-}
-
 
 function createSimpleConflicts (cb) {
   db.put('hello', 'world', function () {

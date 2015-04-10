@@ -5,6 +5,14 @@ var through = require('through2')
 
 module.exports = datVisualDiff
 
+function Row (obj) {
+
+}
+
+function Table (obj) {
+
+}
+
 function datVisualDiff (dat) {
   this.dat = dat
 }

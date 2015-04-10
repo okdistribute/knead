@@ -26,11 +26,10 @@
   "dependencies": {
     "concat": "^1.0.0",
     "daff": "^1.2.6",
-    "dat-core": "0.0.1",
-    "debug": "^2.1.3",
-    "rimraf": "^2.3.2"
+    "debug": "^2.1.3"
   },
   "devDependencies": {
+    "dat-core": "0.0.4",
     "from2": "^1.3.0",
     "memdb": "^0.2.0",
     "tape": "^4.0.0"
