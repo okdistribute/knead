@@ -5,9 +5,6 @@ var through = require('through2')
 
 var toDaff = require('./lib/dat2daff.js')
 
-module.exports = {}
-
-
 function visualdiff(diffStream, opts, cb) {
   var batchedStream = batcher(10)
   diffStream
@@ -19,4 +16,7 @@ function visualdiff(diffStream, opts, cb) {
     })
   )
 }
+
+
+
 module.exports = visualdiff
