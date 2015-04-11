@@ -16,27 +16,27 @@ function visualdiff(diffStream, opts, cb) {
   diffStream
     .pipe(batchedStream)
     .pipe(through.obj(function (data, enc, next) {
-      var daff = toDaff(data, opts)
-      console.log(daff)
-      //cb(null, merges, next)
-    }))
+      console.log(data)
+      toDaff(data, opts, function (daff) {
+        cb(null, daff)
+      })
+    })
+  )
 }
 
-function toDaff (changes, opts) {
+function toDaff (changes, opts, cb) {
   if (!opts) opts = {}
 
   var table1 = new NdjsonTable(changes, function(row) {
-    console.log(row)
-    if (row) return row[0]["row"]
-    else return null
+    if (row && row[0]) return row[0]["value"]
+    else return
   });
 
   var table2 = new NdjsonTable(changes, function(row) {
-    if (row) return row[1]["row"]
-    else return null
+    if (row && row[1]) return row[1]["value"]
+    else return
   });
 
-//  console.log(table1, table2)
   var alignment = daff.compareTables(table1, table2, flags).align();
   var highlighter = new daff.TableDiff(alignment,flags);
   var table_diff = new daff.SimpleTable();
@@ -46,9 +46,9 @@ function toDaff (changes, opts) {
     var diff2html = new daff.DiffRender();
     diff2html.render(table_diff);
     var table_diff_html = diff2html.html();
-    return table_diff_html
+    return cb(table_diff_html)
   }
-  return table_diff
+  return cb(table_diff)
 }
 
 module.exports = visualdiff

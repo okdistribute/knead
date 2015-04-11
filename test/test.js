@@ -13,11 +13,21 @@ test('test js table conflicts from dat-core', function (t) {
   createTableConflicts(function (branches) {
     var diffStream = db.createDiffStream(branches[0], branches[1])
     var opts = {
-      html: false,
+      html: true,
       limit: 10
     }
+    // [ { type: 'put',
+    //   version: 'b6e5b78f508c8df10a504be866134ad67ddb7a64bf1e69a4b114fc297b690a78',
+    //   change: 7,
+    //   key: '0',
+    //   value: [Object] },
+    // { type: 'put',
+    //   version: '447a437350c61432ee4020721ee336a3137ab6d26dcf9649d6ed9e2a2bb36dae',
+    //   change: 4,
+    //   key: '0',
+    //   value: [Object] } ],
     visualdiff(diffStream, opts, function (err, vals, next) {
-      t.same(vals.length, 10)
+      console.log(vals)
       t.end()
     })
   })
