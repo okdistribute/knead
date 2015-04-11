@@ -9,20 +9,6 @@ var memdb = require('memdb')
 
 var db = dat(memdb(), {valueEncoding: 'json'})
 
-// test('test js table conflicts from dat-core', function (t) {
-//   createTableConflicts(function (branches) {
-//     var diffStream = db.createDiffStream(branches[0], branches[1])
-//     var opts = {
-//       html: true,
-//       limit: 10
-//     }
-//     visualdiff(diffStream, opts, function (err, daff, next) {
-//       console.log(daff)
-//       t.end()
-//     })
-//   })
-// })
-
 test('test js table conflicts from dat-core', function (t) {
   createTableConflicts(function (branches) {
     var diffStream = db.createDiffStream(branches[0], branches[1])
