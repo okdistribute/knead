@@ -3,7 +3,7 @@ var debug = require('debug')('daff.visualdiff')
 var batcher = require('byte-stream')
 var through = require('through2')
 
-var toDaff = require('./lib/dat2daf.js')
+var toDaff = require('./lib/dat2daff.js')
 
 module.exports = {}
 
