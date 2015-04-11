@@ -48,7 +48,11 @@ function toDaff (changes, opts, cb) {
     var table_diff_html = diff2html.html();
     return cb(table_diff_html)
   }
-  return cb(table_diff)
+  else {
+    var diff2terminal = new daff.TerminalDiffRender();
+    diff2terminal.render(table_diff)
+    return cb(table_diff)
+  }
 }
 
 module.exports = visualdiff

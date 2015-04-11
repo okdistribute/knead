@@ -13,7 +13,7 @@ test('test js table conflicts from dat-core', function (t) {
   createTableConflicts(function (branches) {
     var diffStream = db.createDiffStream(branches[0], branches[1])
     var opts = {
-      html: true,
+      html: false,
       limit: 10
     }
     // [ { type: 'put',
