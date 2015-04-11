@@ -4,8 +4,8 @@ module.exports.TABLE_0 =  [{country: 'germany'},
                           {country: 'ireland'},
                           {country: 'france'}]
 
-module.exports.TABLE_1 = [{country: 'ireland', capital: 'dublin'},
-                          {country: 'germany', capital: null},
+module.exports.TABLE_1 = [{country: 'germany', capital: null},
+                          {country: 'ireland', capital: 'dublin'},
                            {country: 'france', capital: 'paris'},
                            {country: 'spain', capital: 'madrid'}]
 
