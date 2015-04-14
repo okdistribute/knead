@@ -5,12 +5,33 @@ var through = require('through2')
 
 var dat2daff = require('./lib/dat2daff.js')
 
-function visualdiff(diffStream, opts, cb) {
+function visualdiff(head1, head2, opts, cb) {
+  opts = defaultOpts(opts)
+  if (!opts.db) throw new Error('db required')
+
+  // TODO: batch
+  dat2daff(head1, head2, opts, function (err, output) {
+    cb(null, output)
+  })
+}
+
+
+function defaultOpts (opts) {
   if (!opts) opts = {
+    db: false,
     html: false,
     limit: 20
   }
-  var batchedStream = batcher(opts.limit)
+  return opts
+}
+
+module.exports = visualdiff
+
+visualdiff.fromDiffStream = function(diffStream, opts, cb) {
+  // alternative implementation that has bugs. experimental
+
+  opts = defaultOpts(opts)
+
   diffStream
     .pipe(batchedStream)
     .pipe(through.obj(function (data, enc, next) {
@@ -20,5 +41,3 @@ function visualdiff(diffStream, opts, cb) {
     })
   )
 }
-
-module.exports = visualdiff
