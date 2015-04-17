@@ -13,10 +13,13 @@ var branch1 = argv._[1]
 var differ = new visualdiff(db, branch1, branch2)
 
 repl()
+// TODO: add atom-shell app view option
 
 function repl () {
   var self = this
-  // TODO: add atom-shell app view option
+  var visual = differ.visual
+  if (!visual) return process.exit()
+  console.log(visual)
 
   prompt('Keep this chunk? [y,n,s,e,q,?]', function (val) {
     if (val === 's' || val === 'skip') {
@@ -24,17 +27,17 @@ function repl () {
     }
     if (val === 'y' || val === 'yes') {
       differ.merge() // TODO: choose newer version
+      differ.next()
     }
     if (val === 'n' || val === 'no') {
       differ.decline() // TODO: choose older version
+      differ.next()
     }
     if (val === 'r' || val === 'rows') {
       differ.strategy = 'rows'
-      differ.next()
     }
     if (val === 'c' || val === 'cols') {
       differ.strategy = 'cols'
-      differ.next()
     }
     if (val === '?' || val === 'help') {
       help()
@@ -44,10 +47,10 @@ function repl () {
     }
     else help()
 
+    // all over again...
     repl()
   })
 }
-
 
 function help () {
   console.log('skip (s), yes (y), no (n), cols (c), rows (r), quit (q)')

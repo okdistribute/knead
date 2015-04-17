@@ -1,4 +1,3 @@
-var debug = require('debug')('daff.visualdiff')
 var batcher = require('byte-stream')
 var through = require('through2')
 
@@ -19,33 +18,23 @@ var VisualDiff = function (head1, head2, opts) {
 
   this.mergeStream = db.createMergeStream(head1, head2)
   this.strategy = opts.strategy || 'page'
-
-  function createStream(head) {
-    return db.checkout(head).createReadStream()
-  }
-
   this.stream1 = createStream(head1)
   this.stream2 = createStream(head2)
-}
 
-
-VisualDiff.prototype.visual = function (opts) {
-  // opts:
-  //  - html: boolean. whether or not to convert output to html
-  if (!opts) opts = {}
-  if (!opts.html) opts.html = false
-}
-
-VisualDiff.prototype.next = function (opts, cb) {
-  // opts:
-  //  - limit: number. how many to page through
-  if (!opts) opts = {}
-
-  dat2daff(this.stream1, this.stream2, opts, function (err, table1, table2, output) {
-    cb(null, table1, table2, output)
+  dat2daff(this.stream1, this.stream2, opts, function (err, table1, table2, output, _next) {
+    this.tables = [table1, table2]
+    this.visual = output
+    this._next = _next
   })
 }
 
+function createStream(head) {
+  return db.checkout(head).createReadStream()
+}
+
+VisualDiff.prototype.next = function () {
+  this._next()
+}
 
 VisualDiff.prototype.decline = function () {
 
@@ -56,7 +45,7 @@ VisualDiff.prototype.merge = function () {
   this.next()
 }
 
-VisualDiff.fromDiffStream = function(diffStream, opts, cb) {
+VisualDiff.fromDiffStream = function (diffStream, opts, cb) {
   // alternative implementation that has bugs. experimental
 
   opts = defaultOpts(opts)

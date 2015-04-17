@@ -10,22 +10,22 @@ var testData = require('./testData.js')
 var memdb = require('memdb')
 
 
-// test('visualdiff terminal', function (t) {
-//   var db = dat(memdb(), {valueEncoding: 'json'})
-//   createDatConflicts(db, TABLES, function (heads) {
-//     var opts = {
-//       db: db,
-//       html: false,
-//       limit: 30
-//     }
-//     var differ = visualdiff(heads[0], heads[1], opts)
-//     differ.next(function (err, table1, table2, output) {
-//       console.log(output)
-//       t.same(typeof(output), 'string')
-//       t.end()
-//     })
-//   })
-// })
+test('visualdiff terminal', function (t) {
+  var db = dat(memdb(), {valueEncoding: 'json'})
+  createDatConflicts(db, TABLES, function (heads) {
+    var opts = {
+      db: db,
+      html: false,
+      limit: 30
+    }
+    var differ = visualdiff(heads[0], heads[1], opts)
+    differ.next(function (err, table1, table2, output) {
+      console.log(output)
+      t.same(typeof(output), 'string')
+      t.end()
+    })
+  })
+})
 
 var TABLES = [
   testData.COUNTRIES_0,
