@@ -1,15 +1,15 @@
 module.exports = {}
 
-module.exports.TABLE_0 =  [{country: 'germany'},
+module.exports.COUNTRIES_0 =  [{country: 'germany'},
                           {country: 'ireland'},
                           {country: 'france'}]
 
-module.exports.TABLE_1 = [{country: 'germany', capital: null},
+module.exports.COUNTRIES_1 = [{country: 'germany', capital: null},
                           {country: 'ireland', capital: 'dublin'},
                            {country: 'france', capital: 'paris'},
                            {country: 'spain', capital: 'madrid'}]
 
-module.exports.TABLE_2 =  [{country: 'germany', code: 'de', capital: 'berlin'},
+module.exports.COUNTRIES_2 =  [{country: 'germany', code: 'de', capital: 'berlin'},
                           {country: 'germany1', code: 'de', capital: 'berlin'},
                           {country: 'germany2', code: 'de', capital: 'berlin'},
                           {country: 'germany3', code: 'de', capital: 'berlin'},
