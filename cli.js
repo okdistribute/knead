@@ -29,33 +29,34 @@ function repl (table1, tabel2, output, next) {
   function doprompt ()
     prompt('Keep this chunk? [y,n,s,e,q,?]', function (val) {
       if (val === 's' || val === 'skip') {
-        next()
+        return next()
       }
       if (val === 'y' || val === 'yes') {
         differ.merge() // TODO: choose newer version
-        next()
+        return next()
       }
       if (val === 'n' || val === 'no') {
         differ.decline() // TODO: choose older version
-        next()
+        return next()
       }
       if (val === 'r' || val === 'rows') {
-        // remake differ
         opts.strategy = 'rows'
-        differ = visualdiff(branch1, branch2, opts, onDiff)
+        return visualdiff(branch1, branch2, opts, onDiff)
       }
       if (val === 'c' || val === 'cols') {
         opts.strategy = 'cols'
-        differ = visualdiff(branch1, branch2, opts, onDiff)
-      }
-      if (val === '?' || val === 'help') {
-        help()
+        return visualdiff(branch1, branch2, opts, onDiff)
       }
       if (val === 'q' || val === 'quit') {
         return process.exit()
       }
-      else help()
+      else {
+        help()
+        doprompt()
+      }
+
     })
+
   }
 }
 
