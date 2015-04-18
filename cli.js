@@ -10,46 +10,44 @@ var db = dat(argv.db)
 var branch1 = argv._[0]
 var branch1 = argv._[1]
 
-var differ = new visualdiff(db, branch1, branch2)
+var differ = new visualdiff(db, branch1, branch2, function (table1, table2, output, next) {
+  repl(table1, table2, output, next)
+})
 
-repl()
 // TODO: add atom-shell app view option
 
-function repl () {
+function repl (table1, tabel2, output, next) {
   var self = this
-  var visual = differ.visual
-  if (!visual) return process.exit()
-  console.log(visual)
+  console.log(output)
 
-  prompt('Keep this chunk? [y,n,s,e,q,?]', function (val) {
-    if (val === 's' || val === 'skip') {
-      differ.next()
-    }
-    if (val === 'y' || val === 'yes') {
-      differ.merge() // TODO: choose newer version
-      differ.next()
-    }
-    if (val === 'n' || val === 'no') {
-      differ.decline() // TODO: choose older version
-      differ.next()
-    }
-    if (val === 'r' || val === 'rows') {
-      differ.strategy = 'rows'
-    }
-    if (val === 'c' || val === 'cols') {
-      differ.strategy = 'cols'
-    }
-    if (val === '?' || val === 'help') {
-      help()
-    }
-    if (val === 'q' || val === 'quit') {
-      return process.exit()
-    }
-    else help()
-
-    // all over again...
-    repl()
-  })
+  function doprompt ()
+    prompt('Keep this chunk? [y,n,s,e,q,?]', function (val) {
+      if (val === 's' || val === 'skip') {
+        next()
+      }
+      if (val === 'y' || val === 'yes') {
+        differ.merge() // TODO: choose newer version
+        next()
+      }
+      if (val === 'n' || val === 'no') {
+        differ.decline() // TODO: choose older version
+        next()
+      }
+      if (val === 'r' || val === 'rows') {
+        // remake differ
+      }
+      if (val === 'c' || val === 'cols') {
+        // remake differ
+      }
+      if (val === '?' || val === 'help') {
+        help()
+      }
+      if (val === 'q' || val === 'quit') {
+        return process.exit()
+      }
+      else help()
+    })
+  }
 }
 
 function help () {
