@@ -3,8 +3,8 @@ var through = require('through2')
 
 var dat2daff = require('./lib/dat2daff.js')
 
-var VisualDiff = function (head1, head2, opts) {
-  if (!(this instanceof VisualDiff)) return new VisualDiff(head1, head2, opts)
+function VisualDiff (head1, head2, opts, cb) {
+  if (!(this instanceof VisualDiff)) return new VisualDiff(head1, head2, opts, cb)
   /*
   strategy:
     - 'page': by limit of row, seeing the full table
@@ -18,17 +18,13 @@ var VisualDiff = function (head1, head2, opts) {
 
   this.mergeStream = db.createMergeStream(head1, head2)
   this.strategy = opts.strategy || 'page'
-  this.stream1 = createStream(head1)
-  this.stream2 = createStream(head2)
+  this.stream1 = createStream(db, head1)
+  this.stream2 = createStream(db, head2)
 
-  dat2daff(this.stream1, this.stream2, opts, function (err, table1, table2, output, _next) {
-    this.tables = [table1, table2]
-    this.visual = output
-    this._next = _next
-  })
+  dat2daff(this.stream1, this.stream2, opts, cb)
 }
 
-function createStream(head) {
+function createStream(db, head) {
   return db.checkout(head).createReadStream()
 }
 

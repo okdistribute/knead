@@ -16,12 +16,15 @@ test('visualdiff terminal', function (t) {
     var opts = {
       db: db,
       html: false,
-      limit: 30
+      limit: 3
     }
-    var differ = visualdiff(heads[0], heads[1], opts)
-    differ.next(function (err, table1, table2, output) {
-      console.log(output)
+    visualdiff(heads[0], heads[1], opts, function (err, table1, table2, output, next) {
+      t.equals(table1.height, 4)
+      t.equals(table2.height, 4)
+      t.deepEquals(table1.columns, ['capital', 'country'])
+      t.deepEquals(table2.columns, ['capital', 'code', 'country'])
       t.same(typeof(output), 'string')
+      t.same(typeof(next), 'function')
       t.end()
     })
   })
@@ -42,7 +45,7 @@ test('dat2daff.fromReadStreams with limit', function (t) {
       html: false,
       limit: 20
     }
-    dat2daff(stream1, stream2, opts, function (err, table1, table2, output) {
+    dat2daff(stream1, stream2, opts, function (err, table1, table2, output, next) {
       t.equals(table1.height, 5)
       t.equals(table2.height, 12)
       t.deepEquals(table1.columns, ['capital', 'country'])
@@ -62,7 +65,7 @@ test('dat2daff.fromReadStreams without limit should default to 50', function (t)
     var opts = {
       html: false,
     }
-    dat2daff(stream1, stream2, opts, function (err, table1, table2, output) {
+    dat2daff(stream1, stream2, opts, function (err, table1, table2, output, next) {
       t.equals(table1.height, 5)
       t.equals(table2.height, 12)
       t.deepEquals(table1.columns, ['capital', 'country'])
