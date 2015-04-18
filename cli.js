@@ -3,16 +3,22 @@ var dat = require('dat-core')
 var prompt = require('prompt')
 
 var visualdiff = require('./')
-
 if (argv._.length < 2) return usage()
 
-var db = dat(argv.db)
 var branch1 = argv._[0]
 var branch1 = argv._[1]
 
-var differ = new visualdiff(db, branch1, branch2, function (table1, table2, output, next) {
+var opts = {
+  db: dat(argv.db),
+  limit: argv.limit || 20,
+  strategy: 'page'
+}
+
+var onDiff = function (table1, table2, output, next) {
   repl(table1, table2, output, next)
 })
+
+var differ = visualdiff(branch1, branch2, opts, onDiff)
 
 // TODO: add atom-shell app view option
 
@@ -35,9 +41,12 @@ function repl (table1, tabel2, output, next) {
       }
       if (val === 'r' || val === 'rows') {
         // remake differ
+        opts.strategy = 'rows'
+        differ = visualdiff(branch1, branch2, opts, onDiff)
       }
       if (val === 'c' || val === 'cols') {
-        // remake differ
+        opts.strategy = 'cols'
+        differ = visualdiff(branch1, branch2, opts, onDiff)
       }
       if (val === '?' || val === 'help') {
         help()
