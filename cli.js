@@ -17,10 +17,6 @@ function makeDiffer (heads) {
   differ = visualdiff(heads[0], heads[1], opts, onDiff)
 }
 
-function onDiff (table1, table2, output, next) {
-  repl(table1, table2, output, next)
-}
-
 if (!argv.heads) {
   opts.db.heads(function (err, heads) {
     makeDiffer(heads)
@@ -33,11 +29,11 @@ else {
 
 // TODO: add atom-shell app view option
 
-function repl (table1, tabel2, output, next) {
+function onDiff (heads, table1, table2, output, next) {
   var self = this
   console.log(output)
 
-  function doprompt () {
+  function repl () {
     process.stdout.write('Keep this chunk? [y,n,s,e,q,?] ')
     var val = prompt()
     if (val === 's' || val === 'skip') {
@@ -53,12 +49,12 @@ function repl (table1, tabel2, output, next) {
     }
     if (val === 'r' || val === 'rows') {
       opts.strategy = 'rows'
-      differ = visualdiff(branch1, branch2, opts, onDiff)
+      differ = makeDiffer(heads)
       return
     }
     if (val === 'c' || val === 'cols') {
       opts.strategy = 'cols'
-      differ = visualdiff(branch1, branch2, opts, onDiff)
+      differ = makeDiffer(heads)
       return
     }
     if (val === 'q' || val === 'quit') {
@@ -66,10 +62,10 @@ function repl (table1, tabel2, output, next) {
     }
     else {
       help()
-      doprompt()
+      repl()
     }
   }
-  doprompt()
+  repl()
 }
 
 function help () {
