@@ -3,22 +3,33 @@ var dat = require('dat-core')
 var prompt = require('prompt-sync')
 
 var visualdiff = require('./')
-if (argv._.length < 2) return usage()
+if (argv._.length != 1) return usage()
 
-var head1 = argv._[0]
-var head2 = argv._[1]
+var differ
 
 var opts = {
-  db: dat(argv.db, { valueEncoding: 'json' }),
+  db: dat(argv._[0], { valueEncoding: 'json' }),
   limit: argv.limit || 20,
   strategy: 'pages'
 }
 
-var onDiff = function (table1, table2, output, next) {
+function makeDiffer (heads) {
+  differ = visualdiff(heads[0], heads[1], opts, onDiff)
+}
+
+function onDiff (table1, table2, output, next) {
   repl(table1, table2, output, next)
 }
 
-var differ = visualdiff(head1, head2, opts, onDiff)
+if (!argv.heads) {
+  opts.db.heads(function (err, heads) {
+    makeDiffer(heads)
+  })
+}
+else {
+  heads = argv.heads.split(',')
+  makeDiffer(heads)
+}
 
 // TODO: add atom-shell app view option
 
@@ -42,11 +53,13 @@ function repl (table1, tabel2, output, next) {
     }
     if (val === 'r' || val === 'rows') {
       opts.strategy = 'rows'
-      return visualdiff(branch1, branch2, opts, onDiff)
+      differ = visualdiff(branch1, branch2, opts, onDiff)
+      return
     }
     if (val === 'c' || val === 'cols') {
       opts.strategy = 'cols'
-      return visualdiff(branch1, branch2, opts, onDiff)
+      differ = visualdiff(branch1, branch2, opts, onDiff)
+      return
     }
     if (val === 'q' || val === 'quit') {
       return process.exit()
@@ -64,5 +77,5 @@ function help () {
 }
 
 function usage () {
-  console.log("dat-VisualDiff <head1> <head2> --db <dat-db> [--limit <num>]")
+  console.log("dat-visualDiff <dat-db> [--limit <num>] [--heads <head1,head2>]")
 }
