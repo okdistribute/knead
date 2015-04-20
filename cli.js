@@ -27,7 +27,7 @@ function repl (table1, tabel2, output, next) {
   console.log(output)
 
   function doprompt () {
-    console.log('Keep this chunk? [y,n,s,e,q,?]')
+    process.stdout.write('Keep this chunk? [y,n,s,e,q,?] ')
     var val = prompt()
     if (val === 's' || val === 'skip') {
       return next()
