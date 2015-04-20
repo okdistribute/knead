@@ -2,13 +2,18 @@ var dat = require('dat-core')
 var test = require('tape')
 var from2 = require('from2')
 var fs = require('fs')
-var createDatConflicts = require('./createDatConflicts.js')
+var memdb = require('memdb')
 
+var createDatConflicts = require('./createDatConflicts.js')
 var dat2daff = require('../lib/dat2daff.js')
 var visualdiff = require('../index.js')
 var testData = require('./testData.js')
-var memdb = require('memdb')
 
+var TABLES = [
+  testData.COUNTRIES_0,
+  testData.COUNTRIES_1,
+  testData.COUNTRIES_2
+]
 
 test('visualdiff terminal', function (t) {
   var db = dat(memdb(), {valueEncoding: 'json'})
@@ -30,11 +35,6 @@ test('visualdiff terminal', function (t) {
   })
 })
 
-var TABLES = [
-  testData.COUNTRIES_0,
-  testData.COUNTRIES_1,
-  testData.COUNTRIES_2
-]
 
 test('dat2daff.fromReadStreams with limit', function (t) {
   var db = dat(memdb(), {valueEncoding: 'json'})

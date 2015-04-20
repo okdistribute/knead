@@ -1,6 +1,26 @@
-module.exports = createTableConflicts
+var dat = require('dat-core')
+var argv = require('minimist')(process.argv.slice(2))
 
-function createTableConflicts (db, tables, cb) {
+var testData = require('./testData.js')
+
+var TABLES = [
+  testData.COUNTRIES_0,
+  testData.COUNTRIES_1,
+  testData.COUNTRIES_2
+]
+
+if (argv._.length < 1) return console.log('must supply path')
+var dbPath = argv._[0]
+
+var db = dat(dbPath, { valueEncoding: 'json' })
+
+createDatConflicts(db, TABLES, function (heads) {
+  console.log(heads)
+})
+
+module.exports = createDatConflicts
+
+function createDatConflicts (db, tables, cb) {
   putFromTable(db, tables[0], 0, function () {
     var oldHash = db.head
     putFromTable(db, tables[1], 0 , function () {

@@ -17,7 +17,7 @@ function VisualDiff (head1, head2, opts, cb) {
   var db = opts.db
 
   this.mergeStream = db.createMergeStream(head1, head2)
-  this.strategy = opts.strategy || 'page'
+  this.strategy = opts.strategy || 'pages'
   this.stream1 = createStream(db, head1)
   this.stream2 = createStream(db, head2)
 
@@ -26,10 +26,6 @@ function VisualDiff (head1, head2, opts, cb) {
 
 function createStream(db, head) {
   return db.checkout(head).createReadStream()
-}
-
-VisualDiff.prototype.next = function () {
-  this._next()
 }
 
 VisualDiff.prototype.decline = function () {
