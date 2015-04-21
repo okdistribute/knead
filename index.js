@@ -24,41 +24,57 @@ function VisualDiff (diffStream, opts, cb) {
     - visual: string
     - next: function
   */
+  var self = this
 
   if (!opts) opts = {}
   if (!opts.db) throw new Error('db required')
-  this.limit = (opts.limit || 20) * 2
-  this.strategy = opts.strategy || 'rows'
+  self.limit = (opts.limit || 20) * 2
+  self.html = opts.html || false
+  self.strategy = opts.strategy || 'rows'
 
   var db = opts.db
 
-  this.diffStream = diffStream
-
-  if (this.strategy == 'rows') {
-    var batchedStream = batcher(this.limit)
-    this.diffStream.on('data', function (data) {
-      debug('diffstream data ', data[0], data[1])
-    })
-    this.diffStream
-      .pipe(batchedStream)
-      .pipe(through.obj(function (data, enc, next) {
-        var output = {
-          changes: data,
-          older: getOlderChange(data)
-        }
-        dat2daff.fromDiff(data, opts, function (tables, visual) {
-          debug('tables', tables)
-          debug('output', visual)
-          output.tables = tables
-          cb(output, visual, next)
-        })
-      })
-    )
+  if (self.strategy == 'rows') {
+    self.rows(diffStream, cb)
   }
   else {
-    throw new Error('cols not supported')
+    self.cols(diffStream, cb)
   }
 }
+
+VisualDiff.prototype.rows = function (diffStream, cb) {
+  var self = this
+  var batchedStream = batcher(self.limit)
+
+  diffStream.on('data', function (data) {
+    debug('diffstream data ', data[0], data[1])
+  })
+
+  diffStream
+    .pipe(batchedStream)
+    .pipe(through.obj(function (data, enc, next) {
+      var opts = {
+        html: self.html
+      }
+      dat2daff.fromDiff(data, opts, function (tables, visual) {
+        var output = {
+          changes: data,
+          older: getOlderChange(data),
+          tables: tables
+        }
+        debug('visualdiff callback', output, visual)
+        cb(output, visual, next)
+      })
+    })
+  )
+}
+
+VisualDiff.prototype.cols = function (diffStream, cb) {
+  var self = this
+  throw new Error('cols not implemented yet')
+  // TODO: return rows(diffStream.pipe(colStream), cb)
+}
+
 
 function getOlderChange (changes) {
   // find which one is older
