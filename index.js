@@ -15,7 +15,7 @@ function VisualDiff (heads, opts, cb) {
 
   if (!opts) opts = {}
   if (!opts.db) throw new Error('db required')
-  this.limit = opts.limit || 20
+  this.limit = (opts.limit || 20) * 2
   this.strategy = opts.strategy || 'page'
 
   var db = opts.db
