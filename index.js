@@ -1,21 +1,21 @@
 var batcher = require('byte-stream')
 var through = require('through2')
 var debug = require('debug')('visualdiff')
+var promptSync = require('prompt-sync')
+var Stream = require('stream').Writable
 
-var dat2daff = require('./lib/dat2daff.js')
+var diff2daff = require('./lib/diff2daff.js')
 
 function VisualDiff (diffStream, opts, cb) {
-  if (!(this instanceof VisualDiff)) return new VisualDiff(diffStream, opts, cb)
   /*
   strategy:
     - 'rows': by limit of row, seeing the full table
     - 'cols': by each column that has been identified as 'mostly changed', 'added', or 'deleted'
 
   returns:
-    cb(output, visual, next)
+    onDiff(output, visual, next)
     - output: object
       {
-        older: 'left' or 'right',
         tables: daff tables,
         changes: batched dat diffStream
       }
@@ -23,65 +23,86 @@ function VisualDiff (diffStream, opts, cb) {
     - visual: string
     - next: function
   */
+  if (!(this instanceof VisualDiff)) return new VisualDiff(diffStream, opts, cb)
+  if (!cb) throw new Error('what do I do with the mergeStream? give me an cb')
+
   var self = this
 
   if (!opts) opts = {}
+
   self.limit = (opts.limit || 20) * 2
-  self.html = opts.html || false
   self.strategy = opts.strategy || 'rows'
 
-  if (self.strategy === 'rows') {
-    self.rows(diffStream, cb)
-  } else {
-    self.cols(diffStream, cb)
-  }
-}
-
-VisualDiff.prototype.rows = function (diffStream, cb) {
-  var self = this
+  var mergeStream = new Stream()
   var batchedStream = batcher(self.limit)
 
-  diffStream.on('data', function (data) {
-    debug('diffstream data ', data[0], data[1])
+  var merger = opts.merger || defaultCli
+  var writer = opts.writer || mergeStream.write
+
+
+  batchedStream.on('end', function () {
+    cb(mergeStream)
   })
 
   diffStream
     .pipe(batchedStream)
-    .pipe(through.obj(function (data, enc, next) {
-      var opts = {
-        html: self.html
-      }
-      dat2daff.fromDiff(data, opts, function (tables, visual) {
+    .pipe(through.obj(function (diffs, enc, next) {
+      diff2daff(diffs, function (tables, visual) {
         var output = {
-          changes: data,
-          older: getOlderChange(data),
+          changes: diffs,
           tables: tables
         }
         debug('visualdiff callback', output, visual)
-        cb(output, visual, next)
+
+        merger(output, visual, writer, next)
       })
     })
   )
 }
 
-VisualDiff.prototype.cols = function (diffStream, cb) {
-  throw new Error('cols not implemented yet')
-  // TODO: return rows(diffStream.pipe(colStream), cb)
-}
+function defaultCli (output, visual, writer, next) {
+  console.log(visual)
 
-function getOlderChange (changes) {
-  // find which one is older
-  for (var i = 0; i < changes.length; i++) {
-    var change = changes[i]
-    if (change[0] && change[1]) {
-      if (change[0].change < change[1].change) {
-        return 'left'
+  var changes = output.changes
+  var tables = output.tables
+  console.log(tables)
+
+  function repl () {
+    // TODO: change limit in repl (like git's add -p or e/edit)
+    process.stdout.write('Keep this chunk? [y,n,s,q,?] ')
+    var val = promptSync()
+    if (val === 's' || val === 'skip') {
+      return next()
+    }
+    if (val === 'y' || val === 'yes') {
+      for (choice in tables[0]) {
+        writer(choices[choice][1])
       }
-      if (change[0].change > change[1].change) {
-        return 'right'
+      return next()
+    }
+    if (val === 'n' || val === 'no') {
+      for (choice in tables[1]) {
+        writer(choices[choice])
       }
+      return next()
+    }
+    if (val === 'q' || val === 'quit') {
+      end(mergeStream)
+    } else {
+      help()
+      repl()
     }
   }
+  repl()
 }
+
+function help () {
+  console.log('skip (s), yes (y), no (n), quit (q)')
+}
+
+function usage () {
+  console.log('dat-visualDiff <dat-db> [--limit <num>] [--heads <head1,head2>]')
+}
+
 
 module.exports = VisualDiff
