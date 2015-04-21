@@ -23,11 +23,12 @@ test('visualdiff terminal', function (t) {
       html: false,
       limit: 3
     }
-    visualdiff(heads, opts, function (data, visual, next) {
+    var diffStream = db.createDiffStream(heads[0], heads[1])
+
+    visualdiff(diffStream, opts, function (data, visual, next) {
       var table1 = data.tables[0]
       var table2 = data.tables[1]
 
-      t.equals(data.heads, heads)
       t.equals(data.older, 'left')
       t.equals(table1.height, 3)
       t.equals(table2.height, 4)
@@ -48,12 +49,12 @@ test('visualdiff older switches with head switch', function (t) {
       html: false,
       limit: 3
     }
-    heads = [heads[1], heads[0]]
-    visualdiff(heads, opts, function (data, visual, next) {
+    var diffStream = db.createDiffStream(heads[1], heads[0])
+
+    visualdiff(diffStream, opts, function (data, visual, next) {
       var table1 = data.tables[1]
       var table2 = data.tables[0]
 
-      t.equals(data.heads, heads)
       t.equals(data.older, 'right')
       t.equals(table1.height, 3)
       t.equals(table2.height, 4)

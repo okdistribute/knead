@@ -5,9 +5,8 @@ var prompt = require('prompt-sync')
 
 var dat2daff = require('./lib/dat2daff.js')
 
-function VisualDiff (heads, opts, cb) {
-  if (!cb) cb = VisualDiff.cli
-  if (!(this instanceof VisualDiff)) return new VisualDiff(heads, opts, cb)
+function VisualDiff (diffStream, opts, cb) {
+  if (!(this instanceof VisualDiff)) return new VisualDiff(diffStream, opts, cb)
   /*
   strategy:
     - 'rows': by limit of row, seeing the full table
@@ -18,7 +17,6 @@ function VisualDiff (heads, opts, cb) {
     - output: object
       {
         older: 'left' or 'right',
-        heads: original heads passed,
         tables: daff tables,
         changes: batched dat diffStream
       }
@@ -34,8 +32,7 @@ function VisualDiff (heads, opts, cb) {
 
   var db = opts.db
 
-  this.diffStream = db.createDiffStream(heads[0], heads[1])
-  this.mergeStream = db.createMergeStream(heads[0], heads[1])
+  this.diffStream = diffStream
 
   if (this.strategy == 'rows') {
     var batchedStream = batcher(this.limit)
@@ -46,7 +43,6 @@ function VisualDiff (heads, opts, cb) {
       .pipe(batchedStream)
       .pipe(through.obj(function (data, enc, next) {
         var output = {
-          heads: heads,
           changes: data,
           older: getOlderChange(data)
         }
@@ -77,69 +73,6 @@ function getOlderChange (changes) {
       }
     }
   }
-}
-
-VisualDiff.prototype.decline = function () {
-
-}
-
-VisualDiff.prototype.merge = function () {
-  this.mergeStream.write()
-  this.next()
-}
-
-VisualDiff.cli = function (data, visual, next) {
-  // TODO: modularize into a dat visual merge tool?
-  var self = this
-
-  var heads = data.heads
-  var tables = data.tables
-  var older = data.older // 'left' or 'right'
-
-  console.log(visual)
-
-  function repl () {
-    // TODO: change limit in repl (like git's add -p or e/edit)
-    process.stdout.write('Keep this chunk? [y,n,s,r,c,q,?] ')
-    var val = prompt()
-    if (val === 's' || val === 'skip') {
-      return next()
-    }
-    if (val === 'y' || val === 'yes') {
-      // TODO: choose 'newer' version
-      return next()
-    }
-    if (val === 'n' || val === 'no') {
-      // TODO: choose 'older' version
-      return next()
-    }
-    if (val === 'r' || val === 'rows') {
-      opts.strategy = 'rows'
-      // differ = makeDiffer(heads)
-      return
-    }
-    if (val === 'c' || val === 'cols') {
-      opts.strategy = 'cols'
-      // differ = makeDiffer(heads)
-      return
-    }
-    if (val === 'q' || val === 'quit') {
-      return process.exit()
-    }
-    else {
-      help()
-      repl()
-    }
-  }
-  repl()
-}
-
-function help () {
-  console.log('skip (s), yes (y), no (n), cols (c), rows (r), quit (q)')
-}
-
-function usage () {
-  console.log("dat-visualDiff <dat-db> [--limit <num>] [--heads <head1,head2>]")
 }
 
 module.exports = VisualDiff
