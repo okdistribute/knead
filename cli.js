@@ -10,11 +10,12 @@ var differ
 var opts = {
   db: dat(argv._[0], { valueEncoding: 'json' }),
   limit: argv.limit || 20,
-  strategy: 'pages'
+  strategy: 'pages',
+  html: false // TODO: make atom shell option
 }
 
 function makeDiffer (heads) {
-  differ = visualdiff(heads[0], heads[1], opts, onDiff)
+  differ = visualdiff(heads, opts, onDiff)
 }
 
 if (!argv.heads) {
@@ -26,8 +27,6 @@ else {
   heads = argv.heads.split(',')
   makeDiffer(heads)
 }
-
-// TODO: add atom-shell app view option
 
 function onDiff (heads, table1, table2, output, next) {
   var self = this
