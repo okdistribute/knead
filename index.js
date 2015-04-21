@@ -30,14 +30,17 @@ function DoughStream (opts) {
   if (!opts) opts = {}
   this.destroyed = false
   // TODO: always does 'by row' right now.
-  this.strategy = opts.strategy || 'rows'
+  opts.strategy = opts.strategy || 'rows'
+  this.opts = opts
 }
 
 DoughStream.prototype._transform = function (data, enc, next) {
   var self = this
   debug('_transform', data)
-
-  diff2daff(data, function (tables, visual) {
+  var opts = {
+    rowPath: self.opts.rowPath
+  }
+  diff2daff(data, opts, function (tables, visual) {
     var output = {
       changes: data,
       tables: tables
@@ -91,11 +94,6 @@ DoughStream.prototype.merge = function (output, visual, next) {
 function help () {
   console.log('skip (s), yes (y), no (n), quit (q)')
 }
-
-function usage () {
-  console.log('dough <dat-db> [--limit <num>] [--heads <head1,head2>]')
-}
-
 
 DoughStream.prototype.destroy = function(err) {
   if (this.destroyed) return
