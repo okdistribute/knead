@@ -10,6 +10,18 @@ function VisualDiff (heads, opts, cb) {
   strategy:
     - 'rows': by limit of row, seeing the full table
     - 'cols': by each column that has been identified as 'mostly changed', 'added', or 'deleted'
+
+  returns:
+    cb(data, visual, next)
+    - data: object
+      {
+        older: 'left' or 'right',
+        heads: original heads passed,
+        changes: batched dat diffStream
+      }
+
+    - visual: string
+    - next: function
   */
 
   if (!opts) opts = {}
