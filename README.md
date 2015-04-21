@@ -2,6 +2,7 @@
 
 A visual differ for use with dat. Please don't be shy. This is experimental.
 
+![dat](http://img.shields.io/badge/Development%20sponsored%20by-dat-green.svg?style=flat)
 
 ## Usage
 Only for use in development right now.

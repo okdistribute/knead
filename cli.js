@@ -1,11 +1,13 @@
 var argv = require('minimist')(process.argv.slice(2))
 var dat = require('dat-core')
-var prompt = require('prompt-sync')
+var promptSync = require('prompt-sync')
 
 var visualdiff = require('./')
-if (argv._.length != 1) return usage()
 
-var differ
+if (argv._.length !== 1) {
+  usage()
+  process.exit()
+}
 
 var opts = {
   db: dat(argv._[0], { valueEncoding: 'json' }),
@@ -19,14 +21,14 @@ function makeDiffer (heads) {
   visualdiff(diffStream, opts, function (data, visual, next) {
     console.log(visual)
 
-    var changes = data.changes
-    var tables = data.tables
-    var older = data.older // 'left' or 'right'
+    // var changes = data.changes
+    // var tables = data.tables
+    // var older = data.older // 'left' or 'right'
 
     function repl () {
       // TODO: change limit in repl (like git's add -p or e/edit)
       process.stdout.write('Keep this chunk? [y,n,s,r,c,q,?] ')
-      var val = prompt()
+      var val = promptSync()
       if (val === 's' || val === 'skip') {
         return next()
       }
@@ -50,8 +52,7 @@ function makeDiffer (heads) {
       }
       if (val === 'q' || val === 'quit') {
         return process.exit()
-      }
-      else {
+      } else {
         help()
         repl()
       }
@@ -62,12 +63,11 @@ function makeDiffer (heads) {
 
 if (!argv.heads) {
   opts.db.heads(function (err, heads) {
+    if (err) throw err
     makeDiffer(heads)
   })
-}
-else {
-  heads = argv.heads.split(',')
-  makeDiffer(heads)
+} else {
+  makeDiffer(argv.heads.split(','))
 }
 
 function help () {

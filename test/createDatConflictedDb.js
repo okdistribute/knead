@@ -1,19 +1,18 @@
 var dat = require('dat-core')
 var path = require('path')
 var argv = require('minimist')(process.argv.slice(2))
-var testData = require('./testData.js')
+var DATA = require('test-data')
 
-var TABLES = [
-  testData.COUNTRIES_0,
-  testData.COUNTRIES_1,
-  testData.COUNTRIES_2
-]
+var createDatConflicts = require('./createDatConflicts.js')
 
-if (argv._.length < 1) return console.log('must supply path')
+if (argv._.length < 1) {
+  console.log('must supply path')
+  process.exit()
+}
 var dbPath = path.resolve(__dirname, argv._[0])
 
 var db = dat(dbPath, { valueEncoding: 'json', createIfMissing: true })
 
-createDatConflicts(db, TABLES, function (heads) {
+createDatConflicts(db, DATA.CONFLICTS.SMALL, function (heads) {
   console.log(heads)
 })

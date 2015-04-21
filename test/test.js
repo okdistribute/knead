@@ -1,15 +1,12 @@
 var dat = require('dat-core')
 var test = require('tape')
-var from2 = require('from2')
-var fs = require('fs')
 var memdb = require('memdb')
 
 var createDatConflicts = require('./createDatConflicts.js')
-var dat2daff = require('../lib/dat2daff.js')
 var visualdiff = require('../index.js')
 var DATA = require('test-data')
 
-TABLES = DATA.CONFLICTS.SMALL
+var TABLES = DATA.CONFLICTS.SMALL
 
 test('visualdiff terminal', function (t) {
   var db = dat(memdb(), {valueEncoding: 'json'})
@@ -30,8 +27,8 @@ test('visualdiff terminal', function (t) {
       t.equals(table2.height, 4)
       t.deepEquals(table1.columns, ['capital', 'country'])
       t.deepEquals(table2.columns, ['capital', 'code', 'country'])
-      t.same(typeof(visual), 'string')
-      t.same(typeof(next), 'function')
+      t.same(typeof visual, 'string')
+      t.same(typeof next, 'function')
       t.end()
     })
   })
@@ -56,8 +53,8 @@ test('visualdiff older switches with head switch', function (t) {
       t.equals(table2.height, 4)
       t.deepEquals(table1.columns, ['capital', 'country'])
       t.deepEquals(table2.columns, ['capital', 'code', 'country'])
-      t.same(typeof(visual), 'string')
-      t.same(typeof(next), 'function')
+      t.same(typeof visual, 'string')
+      t.same(typeof next, 'function')
       t.end()
     })
   })

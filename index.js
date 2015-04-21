@@ -26,17 +26,13 @@ function VisualDiff (diffStream, opts, cb) {
   var self = this
 
   if (!opts) opts = {}
-  if (!opts.db) throw new Error('db required')
   self.limit = (opts.limit || 20) * 2
   self.html = opts.html || false
   self.strategy = opts.strategy || 'rows'
 
-  var db = opts.db
-
-  if (self.strategy == 'rows') {
+  if (self.strategy === 'rows') {
     self.rows(diffStream, cb)
-  }
-  else {
+  } else {
     self.cols(diffStream, cb)
   }
 }
@@ -69,7 +65,6 @@ VisualDiff.prototype.rows = function (diffStream, cb) {
 }
 
 VisualDiff.prototype.cols = function (diffStream, cb) {
-  var self = this
   throw new Error('cols not implemented yet')
   // TODO: return rows(diffStream.pipe(colStream), cb)
 }
