@@ -12,7 +12,7 @@ node cli.js <dat-db> [--limit <num>] [--heads <head1,head2>]
 ## See it in (preliminary) action
 
 ```
-node tests/createDatConflicts.js conflicted
+node tests/createDatConflictedDb.js conflicted
 node cli.js tests/conflicted
 ```
 

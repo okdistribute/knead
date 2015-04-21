@@ -23,12 +23,44 @@ test('visualdiff terminal', function (t) {
       html: false,
       limit: 3
     }
-    visualdiff(heads[0], heads[1], opts, function (table1, table2, output, next) {
-      t.equals(table1.height, 4)
+    var diffStream = db.createDiffStream(heads[0], heads[1])
+
+    visualdiff(diffStream, opts, function (data, visual, next) {
+      var table1 = data.tables[0]
+      var table2 = data.tables[1]
+
+      t.equals(data.older, 'left')
+      t.equals(table1.height, 3)
       t.equals(table2.height, 4)
       t.deepEquals(table1.columns, ['capital', 'country'])
       t.deepEquals(table2.columns, ['capital', 'code', 'country'])
-      t.same(typeof(output), 'string')
+      t.same(typeof(visual), 'string')
+      t.same(typeof(next), 'function')
+      t.end()
+    })
+  })
+})
+
+test('visualdiff older switches with head switch', function (t) {
+  var db = dat(memdb(), {valueEncoding: 'json'})
+  createDatConflicts(db, TABLES, function (heads) {
+    var opts = {
+      db: db,
+      html: false,
+      limit: 3
+    }
+    var diffStream = db.createDiffStream(heads[1], heads[0])
+
+    visualdiff(diffStream, opts, function (data, visual, next) {
+      var table1 = data.tables[1]
+      var table2 = data.tables[0]
+
+      t.equals(data.older, 'right')
+      t.equals(table1.height, 3)
+      t.equals(table2.height, 4)
+      t.deepEquals(table1.columns, ['capital', 'country'])
+      t.deepEquals(table2.columns, ['capital', 'code', 'country'])
+      t.same(typeof(visual), 'string')
       t.same(typeof(next), 'function')
       t.end()
     })
@@ -45,18 +77,19 @@ test('dat2daff.fromReadStreams with limit', function (t) {
       html: false,
       limit: 20
     }
-    dat2daff(stream1, stream2, opts, function (table1, table2, output, next) {
+    dat2daff.fromReadStreams(stream1, stream2, opts, function (tables, visual, next) {
+      var table1 = tables[0]
+      var table2 = tables[1]
       t.equals(table1.height, 5)
       t.equals(table2.height, 12)
       t.deepEquals(table1.columns, ['capital', 'country'])
       t.deepEquals(table2.columns, ['capital', 'code', 'country'])
-      t.same(typeof(output), 'string')
+      t.same(typeof(visual), 'string')
       t.same(typeof(next), 'function')
       t.end()
     })
   })
 })
-
 
 test('dat2daff.fromReadStreams without limit should default to 50', function (t) {
   var db = dat(memdb(), {valueEncoding: 'json'})
@@ -66,12 +99,14 @@ test('dat2daff.fromReadStreams without limit should default to 50', function (t)
     var opts = {
       html: false,
     }
-    dat2daff(stream1, stream2, opts, function (table1, table2, output, next) {
+    dat2daff.fromReadStreams(stream1, stream2, opts, function (tables, visual, next) {
+      var table1 = tables[0]
+      var table2 = tables[1]
       t.equals(table1.height, 5)
       t.equals(table2.height, 12)
       t.deepEquals(table1.columns, ['capital', 'country'])
       t.deepEquals(table2.columns, ['capital', 'code', 'country'])
-      t.same(typeof(output), 'string')
+      t.same(typeof(visual), 'string')
       t.same(typeof(next), 'function')
       t.end()
     })
