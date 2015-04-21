@@ -29,10 +29,14 @@ else {
   makeDiffer(heads)
 }
 
-function onDiff (heads, tables, output, next) {
+function onDiff (data, visual, next) {
   var self = this
-  console.log(output)
-  debug(tables)
+
+  var heads = data.heads
+  var tables = data.tables
+  var older = data.older // 'left' or 'right'
+
+  console.log(visual)
 
   function repl () {
     // TODO: change limit in repl (like git's add -p or e/edit)
@@ -42,11 +46,11 @@ function onDiff (heads, tables, output, next) {
       return next()
     }
     if (val === 'y' || val === 'yes') {
-     // differ.merge() // TODO: choose 'newer' version
+      // TODO: choose 'newer' version
       return next()
     }
     if (val === 'n' || val === 'no') {
-     // differ.decline() // TODO: choose 'older' version
+      // TODO: choose 'older' version
       return next()
     }
     if (val === 'r' || val === 'rows') {

@@ -24,20 +24,40 @@ function VisualDiff (heads, opts, cb) {
 
   if (this.strategy == 'rows') {
     var batchedStream = batcher(this.limit)
+    this.diffStream.on('data', function (data) {
+      debug('diffstream data ', data[0], data[1])
+    })
     this.diffStream
       .pipe(batchedStream)
       .pipe(through.obj(function (data, enc, next) {
-        debug('visual diff batched ', data)
-        dat2daff.fromDiff(data, opts, function (tables, output) {
-          debug('tables', tables)
-          debug('output', output)
-          cb(heads, tables, output, next)
+        var older = getOlderChange(data)
+        dat2daff.fromDiff(data, opts, function (data, visual) {
+          debug('tables', data.tables)
+          debug('output', visual)
+          data.heads = heads
+          data.older = older
+          cb(data, visual, next)
         })
       })
     )
   }
   else {
     throw new Error('cols not supported')
+  }
+}
+
+function getOlderChange (changes) {
+  // find which one is older
+  for (var i = 0; i < changes.length; i++) {
+    var change = changes[i]
+    if (change[0] && change[1]) {
+      if (change[0].change < change[1].change) {
+        return 'left'
+      }
+      if (change[0].change > change[1].change) {
+        return 'right'
+      }
+    }
   }
 }
 
