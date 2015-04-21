@@ -1,12 +1,13 @@
-var batcher = require('byte-stream')
 var through = require('through2')
-var debug = require('debug')('visualdiff')
+var debug = require('debug')('dough')
 var promptSync = require('prompt-sync')
-var Stream = require('stream').Writable
-
+var from = require('from2')
+var Transform = require('stream').Transform
+var inherits = require('inherits')
 var diff2daff = require('./lib/diff2daff.js')
 
-function VisualDiff (diffStream, opts, cb) {
+inherits(DoughStream, Transform)
+function DoughStream (opts) {
   /*
   strategy:
     - 'rows': by limit of row, seeing the full table
@@ -23,49 +24,36 @@ function VisualDiff (diffStream, opts, cb) {
     - visual: string
     - next: function
   */
-  if (!(this instanceof VisualDiff)) return new VisualDiff(diffStream, opts, cb)
-  if (!cb) throw new Error('what do I do with the mergeStream? give me an cb')
-
-  var self = this
+  if (!(this instanceof DoughStream)) return new DoughStream(opts)
+  Transform.call(this, {objectMode: true})
 
   if (!opts) opts = {}
-
-  self.limit = (opts.limit || 20) * 2
-  self.strategy = opts.strategy || 'rows'
-
-  var mergeStream = new Stream()
-  var batchedStream = batcher(self.limit)
-
-  var merger = opts.merger || defaultCli
-  var writer = opts.writer || mergeStream.write
-
-
-  batchedStream.on('end', function () {
-    cb(mergeStream)
-  })
-
-  diffStream
-    .pipe(batchedStream)
-    .pipe(through.obj(function (diffs, enc, next) {
-      diff2daff(diffs, function (tables, visual) {
-        var output = {
-          changes: diffs,
-          tables: tables
-        }
-        debug('visualdiff callback', output, visual)
-
-        merger(output, visual, writer, next)
-      })
-    })
-  )
+  this.destroyed = false
+  // TODO: always does 'by row' right now.
+  this.strategy = opts.strategy || 'rows'
 }
 
-function defaultCli (output, visual, writer, next) {
+DoughStream.prototype._transform = function (data, enc, next) {
+  var self = this
+  debug('_transform', data)
+
+  diff2daff(data, function (tables, visual) {
+    var output = {
+      changes: data,
+      tables: tables
+    }
+    self.merge(output, visual, next)
+  })
+}
+
+DoughStream.prototype.merge = function (output, visual, next) {
+  var self = this
+  debug('merge', output)
   console.log(visual)
 
-  var changes = output.changes
   var tables = output.tables
-  console.log(tables)
+  var older = tables[0]
+  var newer = tables[1]
 
   function repl () {
     // TODO: change limit in repl (like git's add -p or e/edit)
@@ -75,19 +63,22 @@ function defaultCli (output, visual, writer, next) {
       return next()
     }
     if (val === 'y' || val === 'yes') {
-      for (choice in tables[0]) {
-        writer(choices[choice][1])
+      for (i in newer.data) {
+        debug('pushing', newer.data[i])
+        self.push(newer.data[i])
       }
       return next()
     }
     if (val === 'n' || val === 'no') {
-      for (choice in tables[1]) {
-        writer(choices[choice])
+      for (i in older.data) {
+        debug('pushing', older.data[i])
+        self.push(older.data[i])
       }
       return next()
     }
     if (val === 'q' || val === 'quit') {
-      end(mergeStream)
+      self.end()
+      process.exit()
     } else {
       help()
       repl()
@@ -96,13 +87,22 @@ function defaultCli (output, visual, writer, next) {
   repl()
 }
 
+
 function help () {
   console.log('skip (s), yes (y), no (n), quit (q)')
 }
 
 function usage () {
-  console.log('dat-visualDiff <dat-db> [--limit <num>] [--heads <head1,head2>]')
+  console.log('dough <dat-db> [--limit <num>] [--heads <head1,head2>]')
 }
 
 
-module.exports = VisualDiff
+DoughStream.prototype.destroy = function(err) {
+  if (this.destroyed) return
+  this.destroyed = true
+
+  this.err = err
+  this.end()
+}
+
+module.exports = DoughStream
