@@ -1,5 +1,6 @@
 var batcher = require('byte-stream')
 var through = require('through2')
+var debug = require('debug')('visualdiff')
 
 var dat2daff = require('./lib/dat2daff.js')
 
@@ -26,15 +27,14 @@ function VisualDiff (heads, opts, cb) {
   this.diffStream
     .pipe(batchedStream)
     .pipe(through.obj(function (data, enc, next) {
-      dat2daff.fromDiff(data, opts, function (table1, table2, output) {
-        cb(heads, table1, table2, output, next)
+      debug('visual diff batched ', data)
+      dat2daff.fromDiff(data, opts, function (tables, output) {
+        debug('tables', tables)
+        debug('output', output)
+        cb(heads, tables, output, next)
       })
     })
   )
-}
-
-VisualDiff.prototype.next = function () {
-  this._next()
 }
 
 VisualDiff.prototype.decline = function () {

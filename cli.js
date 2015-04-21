@@ -1,6 +1,7 @@
 var argv = require('minimist')(process.argv.slice(2))
 var dat = require('dat-core')
 var prompt = require('prompt-sync')
+var debug = require('debug')('visualdiff-cli')
 
 var visualdiff = require('./')
 if (argv._.length != 1) return usage()
@@ -28,9 +29,10 @@ else {
   makeDiffer(heads)
 }
 
-function onDiff (heads, table1, table2, output, next) {
+function onDiff (heads, tables, output, next) {
   var self = this
   console.log(output)
+  debug(tables)
 
   function repl () {
     process.stdout.write('Keep this chunk? [y,n,s,e,q,?] ')
