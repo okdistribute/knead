@@ -11,7 +11,7 @@ var differ
 var opts = {
   db: dat(argv._[0], { valueEncoding: 'json' }),
   limit: argv.limit || 20,
-  strategy: 'pages',
+  strategy: 'rows',
   html: false // TODO: make atom shell option
 }
 
@@ -35,7 +35,8 @@ function onDiff (heads, tables, output, next) {
   debug(tables)
 
   function repl () {
-    process.stdout.write('Keep this chunk? [y,n,s,e,q,?] ')
+    // TODO: change limit in repl (like git's add -p or e/edit)
+    process.stdout.write('Keep this chunk? [y,n,s,r,c,q,?] ')
     var val = prompt()
     if (val === 's' || val === 'skip') {
       return next()
