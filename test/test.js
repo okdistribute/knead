@@ -91,7 +91,6 @@ test('dat2daff.fromReadStreams with limit', function (t) {
   })
 })
 
-
 test('dat2daff.fromReadStreams without limit should default to 50', function (t) {
   var db = dat(memdb(), {valueEncoding: 'json'})
   createDatConflicts(db, TABLES, function (heads) {

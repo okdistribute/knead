@@ -1,7 +1,6 @@
 var batcher = require('byte-stream')
 var through = require('through2')
 var debug = require('debug')('visualdiff')
-var prompt = require('prompt-sync')
 
 var dat2daff = require('./lib/dat2daff.js')
 
@@ -74,7 +73,6 @@ VisualDiff.prototype.cols = function (diffStream, cb) {
   throw new Error('cols not implemented yet')
   // TODO: return rows(diffStream.pipe(colStream), cb)
 }
-
 
 function getOlderChange (changes) {
   // find which one is older

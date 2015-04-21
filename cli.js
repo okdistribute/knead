@@ -1,5 +1,6 @@
 var argv = require('minimist')(process.argv.slice(2))
 var dat = require('dat-core')
+var prompt = require('prompt-sync')
 
 var visualdiff = require('./')
 if (argv._.length != 1) return usage()
@@ -18,7 +19,7 @@ function makeDiffer (heads) {
   visualdiff(diffStream, opts, function (data, visual, next) {
     console.log(visual)
 
-    var heads = data.heads
+    var changes = data.changes
     var tables = data.tables
     var older = data.older // 'left' or 'right'
 
@@ -74,7 +75,5 @@ function help () {
 }
 
 function usage () {
-  console.log("dat-visualDiff <dat-db> [--limit <num>] [--heads <head1,head2>]")
+  console.log('dat-visualDiff <dat-db> [--limit <num>] [--heads <head1,head2>]')
 }
-
-module.exports = VisualDiff
