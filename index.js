@@ -14,11 +14,12 @@ function VisualDiff (heads, opts, cb) {
     - 'cols': by each column that has been identified as 'mostly changed', 'added', or 'deleted'
 
   returns:
-    cb(data, visual, next)
-    - data: object
+    cb(output, visual, next)
+    - output: object
       {
         older: 'left' or 'right',
         heads: original heads passed,
+        tables: daff tables,
         changes: batched dat diffStream
       }
 
@@ -44,13 +45,16 @@ function VisualDiff (heads, opts, cb) {
     this.diffStream
       .pipe(batchedStream)
       .pipe(through.obj(function (data, enc, next) {
-        var older = getOlderChange(data)
-        dat2daff.fromDiff(data, opts, function (data, visual) {
-          debug('tables', data.tables)
+        var output = {
+          heads: heads,
+          changes: data,
+          older: getOlderChange(data)
+        }
+        dat2daff.fromDiff(data, opts, function (tables, visual) {
+          debug('tables', tables)
           debug('output', visual)
-          data.heads = heads
-          data.older = older
-          cb(data, visual, next)
+          output.tables = tables
+          cb(output, visual, next)
         })
       })
     )

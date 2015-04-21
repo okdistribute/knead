@@ -27,6 +27,7 @@ test('visualdiff terminal', function (t) {
       var table1 = data.tables[0]
       var table2 = data.tables[1]
 
+      t.equals(data.heads, heads)
       t.equals(data.older, 'left')
       t.equals(table1.height, 3)
       t.equals(table2.height, 4)
@@ -52,6 +53,7 @@ test('visualdiff older switches with head switch', function (t) {
       var table1 = data.tables[1]
       var table2 = data.tables[0]
 
+      t.equals(data.heads, heads)
       t.equals(data.older, 'right')
       t.equals(table1.height, 3)
       t.equals(table2.height, 4)
@@ -74,9 +76,9 @@ test('dat2daff.fromReadStreams with limit', function (t) {
       html: false,
       limit: 20
     }
-    dat2daff.fromReadStreams(stream1, stream2, opts, function (data, visual, next) {
-      var table1 = data.tables[0]
-      var table2 = data.tables[1]
+    dat2daff.fromReadStreams(stream1, stream2, opts, function (tables, visual, next) {
+      var table1 = tables[0]
+      var table2 = tables[1]
       t.equals(table1.height, 5)
       t.equals(table2.height, 12)
       t.deepEquals(table1.columns, ['capital', 'country'])
@@ -97,9 +99,9 @@ test('dat2daff.fromReadStreams without limit should default to 50', function (t)
     var opts = {
       html: false,
     }
-    dat2daff.fromReadStreams(stream1, stream2, opts, function (data, visual, next) {
-      var table1 = data.tables[0]
-      var table2 = data.tables[1]
+    dat2daff.fromReadStreams(stream1, stream2, opts, function (tables, visual, next) {
+      var table1 = tables[0]
+      var table2 = tables[1]
       t.equals(table1.height, 5)
       t.equals(table2.height, 12)
       t.deepEquals(table1.columns, ['capital', 'country'])
