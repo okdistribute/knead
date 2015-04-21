@@ -1,5 +1,5 @@
 var dat = require('dat-core')
-var datTestHarness = require('dat-beta/tests/harness')
+var path = require('path')
 var argv = require('minimist')(process.argv.slice(2))
 
 var testData = require('./testData.js')
@@ -11,10 +11,9 @@ var TABLES = [
 ]
 
 if (argv._.length < 1) return console.log('must supply path')
-var dbPath = argv._[0]
+var dbPath = path.resolve(__dirname, argv._[0])
 
-datTestHarness.onedat(dbPath)
-var db = dat(dbPath, { valueEncoding: 'json' })
+var db = dat(dbPath, { valueEncoding: 'json', createIfMissing: true })
 
 createDatConflicts(db, TABLES, function (heads) {
   console.log(heads)
