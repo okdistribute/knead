@@ -21,8 +21,7 @@ var limit = (argv.limit || 20) * 2
 
 if (fs.existsSync(outPath)) {
   console.log(outPath, 'exists. Appending to end of file.')
-}
-else {
+} else {
   console.log('Creating new file', outPath)
 }
 

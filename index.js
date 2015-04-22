@@ -1,7 +1,5 @@
-var through = require('through2')
 var debug = require('debug')('dough')
 var promptSync = require('prompt-sync')
-var from = require('from2')
 var Transform = require('stream').Transform
 var inherits = require('inherits')
 var diff2daff = require('./lib/diff2daff.js')
@@ -66,7 +64,7 @@ DoughStream.prototype.merge = function (output, visual, next) {
       return next()
     }
     if (val === 'y' || val === 'yes') {
-      for (i in newer.data) {
+      for (var i in newer.data) {
         debug('pushing', newer.data[i])
         self.push(newer.data[i])
       }
@@ -90,12 +88,11 @@ DoughStream.prototype.merge = function (output, visual, next) {
   repl()
 }
 
-
 function help () {
   console.log('skip (s), yes (y), no (n), quit (q)')
 }
 
-DoughStream.prototype.destroy = function(err) {
+DoughStream.prototype.destroy = function (err) {
   if (this.destroyed) return
   this.destroyed = true
 
