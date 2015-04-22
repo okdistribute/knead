@@ -2,6 +2,8 @@
 
 ![dat](http://img.shields.io/badge/Development%20sponsored%20by-dat-green.svg?style=flat)
 
+[![NPM](https://nodei.co/npm/knead.png?global=true)](https://nodei.co/npm/knead/)
+
 ##### Resolve Not Small Data conflicts with manual merges.
 
 *Not Small Data.*  When data conflicts are sufficiently troubling to resolve manually.
