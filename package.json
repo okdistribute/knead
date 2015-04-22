@@ -1,14 +1,17 @@
 {
-  "name": "dat-visualdiff",
+  "name": "dough",
   "version": "1.0.0",
-  "description": "a visual differ for dat",
+  "description": "Resolve streaming conflicts with manual merges.",
   "main": "index.js",
   "scripts": {
     "test": "standard && node test/test.js"
   },
+  "bin": {
+    "dough": "cli.js"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/karissa/dat-visualdiff.git"
+    "url": "https://github.com/karissa/dough.git"
   },
   "keywords": [
     "diff",
@@ -20,9 +23,9 @@
   "author": "Karissa McKelvey <karissa@karissamck.com> (http://karissamck.com/)",
   "license": "BSD",
   "bugs": {
-    "url": "https://github.com/karissa/dat-visualdiff/issues"
+    "url": "https://github.com/karissa/dough/issues"
   },
-  "homepage": "https://github.com/karissa/dat-visualdiff",
+  "homepage": "https://github.com/karissa/dough",
   "dependencies": {
     "byte-stream": "^2.1.0",
     "daff": "^1.2.12",

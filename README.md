@@ -1,18 +1,23 @@
 # dough
 
-A manual visual diff tool. See cli.js or test.js for JS usage examples.
-
 ![dat](http://img.shields.io/badge/Development%20sponsored%20by-dat-green.svg?style=flat)
+
+#### Knead your data safely. Resolve streaming conflicts with manual merges.
+
+![diff](/images/diff.png)
+
+You can send two files into `dough`. The user is presented with a [daff](https://github.com/paulfitz/daff) for each chunk, prompting to either 'keep' the changes or not.
 
 ## Usage
 
+`base-file`: also known as `local file`, this is the file that will work as the 'truth' for the diff
+`changed-file`: also known as `remote file`, this is the file that is proposing changes
+`resolved-file`: this is where the approved or disapproved changes will be saved.
+
 ```
-dough <base> <newfile> <outfile> [--limit <num>]
+dough <base-file> <changed-file> <resolved-file> [--format csv,ndjson,json] [--limit <num>]
 ```
 
-## See it in (preliminary) action
-```
-node tests/createDatConflictedDb.js conflicted
-node cli.js tests/conflicted
-```
+## JS
 
+See cli.js or test.js for using this module in js.
