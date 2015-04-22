@@ -4,8 +4,8 @@ var Transform = require('stream').Transform
 var inherits = require('inherits')
 var diff2daff = require('./lib/diff2daff.js')
 
-inherits(DoughStream, Transform)
-function DoughStream (opts) {
+inherits(KneadStream, Transform)
+function KneadStream (opts) {
   /*
   strategy:
     - 'rows': by limit of row, seeing the full table
@@ -22,7 +22,7 @@ function DoughStream (opts) {
     - visual: string
     - next: function
   */
-  if (!(this instanceof DoughStream)) return new DoughStream(opts)
+  if (!(this instanceof KneadStream)) return new KneadStream(opts)
   Transform.call(this, {objectMode: true})
 
   if (!opts) opts = {}
@@ -32,7 +32,7 @@ function DoughStream (opts) {
   this.opts = opts
 }
 
-DoughStream.prototype._transform = function (data, enc, next) {
+KneadStream.prototype._transform = function (data, enc, next) {
   var self = this
   debug('_transform', data)
   var opts = {
@@ -47,7 +47,7 @@ DoughStream.prototype._transform = function (data, enc, next) {
   })
 }
 
-DoughStream.prototype.merge = function (output, visual, next) {
+KneadStream.prototype.merge = function (output, visual, next) {
   var self = this
   debug('merge', output)
   console.log(visual)
@@ -92,7 +92,7 @@ function help () {
   console.log('skip (s), yes (y), no (n), quit (q)')
 }
 
-DoughStream.prototype.destroy = function (err) {
+KneadStream.prototype.destroy = function (err) {
   if (this.destroyed) return
   this.destroyed = true
 
@@ -100,4 +100,4 @@ DoughStream.prototype.destroy = function (err) {
   this.end()
 }
 
-module.exports = DoughStream
+module.exports = KneadStream

@@ -1,5 +1,5 @@
 {
-  "name": "dough",
+  "name": "knead",
   "version": "1.0.0",
   "description": "Resolve streaming conflicts with manual merges.",
   "main": "index.js",
@@ -7,11 +7,11 @@
     "test": "standard && node test/test.js"
   },
   "bin": {
-    "dough": "cli.js"
+    "knead": "cli.js"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/karissa/dough.git"
+    "url": "https://github.com/karissa/knead.git"
   },
   "keywords": [
     "diff",
@@ -23,9 +23,9 @@
   "author": "Karissa McKelvey <karissa@karissamck.com> (http://karissamck.com/)",
   "license": "BSD",
   "bugs": {
-    "url": "https://github.com/karissa/dough/issues"
+    "url": "https://github.com/karissa/knead/issues"
   },
-  "homepage": "https://github.com/karissa/dough",
+  "homepage": "https://github.com/karissa/knead",
   "dependencies": {
     "byte-stream": "^2.1.0",
     "daff": "^1.2.12",
