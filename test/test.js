@@ -49,7 +49,6 @@ test('dough from sorted-diff-stream', function (t) {
       rObj.key = index
       rObj.value = obj
       index++
-      console.log(rObj)
       return rObj
     })
     return data
@@ -58,9 +57,13 @@ test('dough from sorted-diff-stream', function (t) {
   var older = from.obj(keyData(TABLES[1]))
   var newer = from.obj(keyData(TABLES[2]))
 
-  var diffStream = diff(older, newer)
+  function jsonEquals (a, b, cb) {
+    if (JSON.stringify(a) === JSON.stringify(b)) cb(null, true)
+    else cb(null, false)
+  }
 
-  diffStream.on('data', console.log)
+  var diffStream = diff(older, newer, jsonEquals)
+
   var doughStream = dough()
 
   doughStream.merge = function (output, visual, next) {
@@ -68,7 +71,7 @@ test('dough from sorted-diff-stream', function (t) {
     var table2 = output.tables[1]
     console.log(visual)
 
-    t.equals(table1.height, 3)
+    t.equals(table1.height, 4)
     t.equals(table2.height, 4)
     t.deepEquals(table1.columns, ['capital', 'country'])
     t.deepEquals(table2.columns, ['capital', 'code', 'country'])
