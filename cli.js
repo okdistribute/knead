@@ -1,39 +1,61 @@
 #!/usr/bin/env node
 
 var argv = require('minimist')(process.argv.slice(2))
-var dat = require('dat-core')
+var detect = require('detect-data-stream')
+var formatData = require('format-data')
+var diff = require('sorted-diff-stream')
 var fs = require('fs')
 var batcher = require('byte-stream')
 var dough = require('./')
 
-if (argv._.length !== 1) {
+if (argv._.length !== 3) {
   usage()
   process.exit()
 }
 
-var db = dat(argv._[0], { valueEncoding: 'json' })
+var localPath = argv._[0]
+var remotePath = argv._[1]
+var outPath = argv._[2]
+var format = argv.format || 'csv'
+var limit = (argv.limit || 20) * 2
+
+if (fs.existsSync(outPath)) {
+  console.log(outPath, 'exists. Appending to end of file.')
+} else {
+  console.log('Creating new file', outPath)
+}
+
+var localFile = fs.createReadStream(localPath).pipe(detect())
+var newFile = fs.createReadStream(remotePath).pipe(detect())
+var outFile = fs.createWriteStream(outPath, {flags: 'a'})
+
+function jsonEquals (a, b, cb) {
+  if (JSON.stringify(a) === JSON.stringify(b)) cb(null, true)
+  else cb(null, false)
+}
+
+var diffStream = diff(localFile, newFile, jsonEquals)
+
+var batchStream = batcher(limit)
 
 var opts = {
   strategy: 'rows',
   html: false // TODO: make atom shell option
 }
+var doughStream = dough(opts)
 
-function makeDatDough (heads) {
-  var diffStream = db.createDiffStream(heads[0], heads[1])
+var outStream = diffStream.pipe(batchStream).pipe(doughStream).pipe(formatData(format))
 
-  var limit = (argv.limit || 20) * 2
-  var batchStream = batcher(limit)
-  var doughStream = dough(opts)
+outStream.on('data', function (data) {
+  outFile.write(data)
+})
 
-  var outStream = diffStream.pipe(batchStream).pipe(doughStream)
-  outStream.on('data', console.log)
-}
+outStream.on('end', function () {
+  localFile.end()
+  newFile.end()
+  outFile.end()
+})
 
-if (!argv.heads) {
-  db.heads(function (err, heads) {
-    if (err) throw err
-    makeDatDough(heads)
-  })
-} else {
-  makeDatDough(argv.heads.split(','))
+function usage () {
+  console.log('dough <basefile> <newfile> <outfile> [--format csv,ndjson,json] [--limit <num>]')
 }
