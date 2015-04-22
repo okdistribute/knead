@@ -12,7 +12,9 @@ You can send two files into `knead`. The user is presented with a [daff](https:/
 
 ## Usage
 
-`knead <base-file> <changed-file> <resolved-file> [--format] [--limit]`
+```
+$ knead <base-file> <changed-file> <resolved-file> [--format] [--limit]
+```
 
 `base-file`: also known as `local file`, this is the file that will work as the 'truth' for the diff
 
