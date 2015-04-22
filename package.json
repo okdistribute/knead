@@ -1,6 +1,6 @@
 {
   "name": "knead",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Resolve streaming conflicts with manual merges.",
   "main": "index.js",
   "scripts": {
