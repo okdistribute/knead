@@ -2,9 +2,9 @@
 
 ![dat](http://img.shields.io/badge/Development%20sponsored%20by-dat-green.svg?style=flat)
 
-##### Knead your doughy data. Resolve Not Small Data conflicts with manual merges.
+##### Resolve Not Small Data conflicts with manual merges.
 
-*Not Small Data.* /nät/ /smôl/ /dādə/ (noun): When data conflicts are sufficiently troubling to resolve manually.
+*Not Small Data.*  When data conflicts are sufficiently troubling to resolve manually.
 
 ![diff](/images/diff.png)
 
