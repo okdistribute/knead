@@ -2,9 +2,9 @@
 
 ![dat](http://img.shields.io/badge/Development%20sponsored%20by-dat-green.svg?style=flat)
 
-#### Knead your doughy data. Resolve Not Small Data conflicts with manual merges.
+Knead your doughy data. Resolve Not Small Data conflicts with manual merges.
 
-Not Small Data. /nät/ /smôl/ /dādə/ (noun).
+Not Small Data. */nät/ /smôl/ /dādə/ (noun).*
 When data conflicts are sufficiently troubling to resolve manually.
 
 ![diff](/images/diff.png)
@@ -22,8 +22,3 @@ knead <base-file> <changed-file> <resolved-file> [--format csv,ndjson,json] [--l
 `changed-file`: also known as `remote file`, this is the file that is proposing changes
 
 `resolved-file`: this is where the approved or disapproved changes will be saved.
-
-
-## JS
-
-See cli.js or test.js for using this module in js.
