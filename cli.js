@@ -50,5 +50,5 @@ outStream.on('data', function (data) {
 })
 
 function usage () {
-  console.log('dough <basefile> <newfile> <outfile> [--format csv,ndjson,json] [--limit <num>]')
+  console.log('knead <basefile> <newfile> <outfile> [--format csv,ndjson,json] [--limit <num>]')
 }
