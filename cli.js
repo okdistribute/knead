@@ -6,7 +6,7 @@ var formatData = require('format-data')
 var diff = require('sorted-diff-stream')
 var fs = require('fs')
 var batcher = require('byte-stream')
-var dough = require('./')
+var knead = require('./')
 
 if (argv._.length !== 3) {
   usage()
@@ -42,18 +42,11 @@ var opts = {
   strategy: 'rows',
   html: false // TODO: make atom shell option
 }
-var doughStream = dough(opts)
 
-var outStream = diffStream.pipe(batchStream).pipe(doughStream).pipe(formatData(format))
+var outStream = diffStream.pipe(batchStream).pipe(knead(opts)).pipe(formatData(format))
 
 outStream.on('data', function (data) {
   outFile.write(data)
-})
-
-outStream.on('end', function () {
-  localFile.end()
-  newFile.end()
-  outFile.end()
 })
 
 function usage () {

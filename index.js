@@ -30,6 +30,8 @@ function KneadStream (opts) {
   // TODO: always does 'by row' right now.
   opts.strategy = opts.strategy || 'rows'
   this.opts = opts
+  this.limit = (opts.limit || 20) * 2
+  this.batch = opts.batch || true
 }
 
 KneadStream.prototype._transform = function (data, enc, next) {

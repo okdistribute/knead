@@ -6,12 +6,12 @@ var diff = require('sorted-diff-stream')
 var from = require('from2')
 
 var createDatConflicts = require('./createDatConflicts.js')
-var dough = require('../index.js')
+var knead = require('../index.js')
 var DATA = require('test-data')
 
 var TABLES = DATA.CONFLICTS.SMALL
 
-test('dat dough', function (t) {
+test('dat knead', function (t) {
   var db = dat(memdb(), {valueEncoding: 'json'})
   createDatConflicts(db, TABLES, function (heads) {
     var diffStream = db.createDiffStream(heads[0], heads[1])
@@ -19,9 +19,9 @@ test('dat dough', function (t) {
     var opts = {
       rowPath: function (row) { return row['value'] }
     }
-    var doughStream = dough(opts)
+    var kneadStream = knead(opts)
 
-    doughStream.merge = function (output, visual, next) {
+    kneadStream.merge = function (output, visual, next) {
       var table1 = output.tables[0]
       var table2 = output.tables[1]
       console.log(visual)
@@ -37,11 +37,11 @@ test('dat dough', function (t) {
 
     var batchStream = batcher(3 * 2)
 
-    diffStream.pipe(batchStream).pipe(doughStream)
+    diffStream.pipe(batchStream).pipe(kneadStream)
   })
 })
 
-test('dough from sorted-diff-stream', function (t) {
+test('knead from sorted-diff-stream', function (t) {
   function keyData (data) {
     var index = 0
     data.map(function (obj) {
@@ -64,9 +64,9 @@ test('dough from sorted-diff-stream', function (t) {
 
   var diffStream = diff(older, newer, jsonEquals)
 
-  var doughStream = dough()
+  var kneadStream = knead()
 
-  doughStream.merge = function (output, visual, next) {
+  kneadStream.merge = function (output, visual, next) {
     var table1 = output.tables[0]
     var table2 = output.tables[1]
     console.log(visual)
@@ -82,5 +82,5 @@ test('dough from sorted-diff-stream', function (t) {
 
   var batchStream = batcher(3 * 2)
 
-  diffStream.pipe(batchStream).pipe(doughStream)
+  diffStream.pipe(batchStream).pipe(kneadStream)
 })

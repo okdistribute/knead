@@ -14,7 +14,7 @@ $ npm install -g knead
 
 ![diff](/images/diff.png)
 
-You can send two files into `knead`. The user is presented with a [daff](https://github.com/paulfitz/daff) for each chunk, prompting to either 'keep' the changes or not.
+You can send two files into `knead`. You'll see a [daff](https://github.com/paulfitz/daff) for each chunk, with a prompt to keep the changes or not. Changes that are kept will be written to the given resolved file.
 
 ## Usage
 
