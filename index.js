@@ -2,8 +2,23 @@ var debug = require('debug')('dough')
 var promptSync = require('prompt-sync')
 var Transform = require('stream').Transform
 var inherits = require('inherits')
+var Batcher = require('byte-stream')
 var diff2daff = require('./lib/diff2daff.js')
 
+module.exports = function (diffStream, opts) {
+  if (!opts) opts = {}
+  var limit = (opts.limit || 20) * 2
+  var batch = opts.batch || true
+
+  var batchStream = Batcher(limit)
+  var kneadStream = KneadStream(opts)
+
+  if (batch) diffStream = diffStream.pipe(batchStream)
+
+  return diffStream.pipe(kneadStream)
+}
+
+module.exports.KneadStream = KneadStream
 inherits(KneadStream, Transform)
 function KneadStream (opts) {
   /*
@@ -30,8 +45,6 @@ function KneadStream (opts) {
   // TODO: always does 'by row' right now.
   opts.strategy = opts.strategy || 'rows'
   this.opts = opts
-  this.limit = (opts.limit || 20) * 2
-  this.batch = opts.batch || true
 }
 
 KneadStream.prototype._transform = function (data, enc, next) {
@@ -101,5 +114,3 @@ KneadStream.prototype.destroy = function (err) {
   this.err = err
   this.end()
 }
-
-module.exports = KneadStream

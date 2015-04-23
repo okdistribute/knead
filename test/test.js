@@ -1,6 +1,5 @@
 var dat = require('dat-core')
 var test = require('tape')
-var batcher = require('byte-stream')
 var memdb = require('memdb')
 var diff = require('sorted-diff-stream')
 var from = require('from2')
@@ -17,9 +16,10 @@ test('dat knead', function (t) {
     var diffStream = db.createDiffStream(heads[0], heads[1])
 
     var opts = {
+      limit: 3,
       rowPath: function (row) { return row['value'] }
     }
-    var kneadStream = knead(opts)
+    var kneadStream = knead(diffStream, opts)
 
     kneadStream.merge = function (output, visual, next) {
       var table1 = output.tables[0]
@@ -34,10 +34,6 @@ test('dat knead', function (t) {
       t.same(typeof next, 'function')
       t.end()
     }
-
-    var batchStream = batcher(3 * 2)
-
-    diffStream.pipe(batchStream).pipe(kneadStream)
   })
 })
 
@@ -64,7 +60,9 @@ test('knead from sorted-diff-stream', function (t) {
 
   var diffStream = diff(older, newer, jsonEquals)
 
-  var kneadStream = knead()
+  var kneadStream = knead(diffStream, {
+    limit: 3
+  })
 
   kneadStream.merge = function (output, visual, next) {
     var table1 = output.tables[0]
@@ -79,8 +77,4 @@ test('knead from sorted-diff-stream', function (t) {
     t.same(typeof next, 'function')
     t.end()
   }
-
-  var batchStream = batcher(3 * 2)
-
-  diffStream.pipe(batchStream).pipe(kneadStream)
 })
