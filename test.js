@@ -3,7 +3,7 @@ var diff = require('sorted-diff-stream')
 var DATA = require('test-data')
 var from = require('from2')
 
-var knead = require('../index.js')
+var knead = require('./')
 
 var TABLES = DATA.CONFLICTS.SMALL
 

@@ -4,7 +4,7 @@
   "description": "Resolve streaming conflicts with manual merges.",
   "main": "index.js",
   "scripts": {
-    "test": "standard && node test/test.js"
+    "test": "standard && tape test.js"
   },
   "bin": {
     "knead": "cli.js"
