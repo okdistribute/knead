@@ -1,6 +1,6 @@
 {
   "name": "knead",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Resolve streaming conflicts with manual merges.",
   "main": "index.js",
   "scripts": {
@@ -15,10 +15,15 @@
   },
   "keywords": [
     "diff",
+    "daff",
+    "merge",
+    "streaming",
+    "big",
     "visual",
     "data",
     "tabular",
-    "dat"
+    "dat",
+    "csv"
   ],
   "author": "Karissa McKelvey <karissa@karissamck.com> (http://karissamck.com/)",
   "license": "BSD",
@@ -41,9 +46,7 @@
     "through2": "^0.6.5"
   },
   "devDependencies": {
-    "dat-core": "0.0.5",
     "from2": "^1.3.0",
-    "memdb": "^0.2.0",
     "tape": "^4.0.0"
   }
 }

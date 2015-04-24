@@ -2,59 +2,49 @@ var debug = require('debug')('dough')
 var promptSync = require('prompt-sync')
 var Transform = require('stream').Transform
 var inherits = require('inherits')
-var diff2daff = require('./lib/diff2daff.js')
+var Batcher = require('byte-stream')
+var DaffStream = require('daff-stream')
+
+module.exports = function (diffStream, opts, merge) {
+  if (!opts) opts = {}
+  var limit = (opts.limit || 20) * 2
+  var batch = opts.batch || true
+
+  var batchStream = Batcher(limit)
+  var daffStream = DaffStream(opts.rowPath)
+  var kneadStream = KneadStream(merge)
+
+  if (batch) diffStream = diffStream.pipe(batchStream)
+
+  return diffStream.pipe(daffStream).pipe(kneadStream)
+}
+
+module.exports.KneadStream = KneadStream
 
 inherits(KneadStream, Transform)
-function KneadStream (opts) {
+function KneadStream (merge) {
   /*
-  strategy:
-    - 'rows': by limit of row, seeing the full table
-    - 'cols': by each column that has been identified as 'mostly changed', 'added', or 'deleted'
-
-  returns:
-    onDiff(output, visual, next)
-    - output: object
-      {
-        tables: daff tables,
-        changes: batched dat diffStream
-      }
-
-    - visual: string
-    - next: function
+  transforms to:
+    {
+      tables: daff tables,
+      visual: the terminal visual for that daff
+    }
   */
-  if (!(this instanceof KneadStream)) return new KneadStream(opts)
+  if (!(this instanceof KneadStream)) return new KneadStream(merge)
   Transform.call(this, {objectMode: true})
-
-  if (!opts) opts = {}
   this.destroyed = false
-  // TODO: always does 'by row' right now.
-  opts.strategy = opts.strategy || 'rows'
-  this.opts = opts
-  this.limit = (opts.limit || 20) * 2
-  this.batch = opts.batch || true
+  this.merge = merge || this.cli
 }
 
 KneadStream.prototype._transform = function (data, enc, next) {
   var self = this
-  debug('_transform', data)
-  var opts = {
-    rowPath: self.opts.rowPath
-  }
-  diff2daff(data, opts, function (tables, visual) {
-    var output = {
-      changes: data,
-      tables: tables
-    }
-    self.merge(output, visual, next)
-  })
+  debug('merge', data)
+  self.merge(data.tables, data.visual, self.push.bind(self), next)
 }
 
-KneadStream.prototype.merge = function (output, visual, next) {
-  var self = this
-  debug('merge', output)
+KneadStream.prototype.cli = function (tables, visual, push, next) {
   console.log(visual)
 
-  var tables = output.tables
   var older = tables[0]
   var newer = tables[1]
 
@@ -68,19 +58,18 @@ KneadStream.prototype.merge = function (output, visual, next) {
     if (val === 'y' || val === 'yes') {
       for (var i in newer.data) {
         debug('pushing', newer.data[i])
-        self.push(newer.data[i])
+        push(newer.data[i])
       }
       return next()
     }
     if (val === 'n' || val === 'no') {
       for (i in older.data) {
         debug('pushing', older.data[i])
-        self.push(older.data[i])
+        push(older.data[i])
       }
       return next()
     }
     if (val === 'q' || val === 'quit') {
-      self.end()
       process.exit()
     } else {
       help()
@@ -97,9 +86,6 @@ function help () {
 KneadStream.prototype.destroy = function (err) {
   if (this.destroyed) return
   this.destroyed = true
-
   this.err = err
   this.end()
 }
-
-module.exports = KneadStream
