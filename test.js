@@ -1,6 +1,6 @@
 var test = require('tape')
 var diff = require('sorted-diff-stream')
-var DATA = require('test-data')
+var DATA = require('conflict-spectrum')
 var from = require('from2')
 
 var knead = require('./')
