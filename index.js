@@ -39,7 +39,7 @@ function KneadStream (merge) {
 KneadStream.prototype._transform = function (data, enc, next) {
   var self = this
   debug('merge', data)
-  self.merge(data.tables, data.visual, self.push, next)
+  self.merge(data.tables, data.visual, self.push.bind(self), next)
 }
 
 KneadStream.prototype.cli = function (tables, visual, push, next) {
