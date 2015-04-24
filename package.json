@@ -15,10 +15,15 @@
   },
   "keywords": [
     "diff",
+    "daff",
+    "merge",
+    "streaming",
+    "big",
     "visual",
     "data",
     "tabular",
-    "dat"
+    "dat",
+    "csv"
   ],
   "author": "Karissa McKelvey <karissa@karissamck.com> (http://karissamck.com/)",
   "license": "BSD",
