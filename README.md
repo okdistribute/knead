@@ -2,8 +2,6 @@
 
 ![dat](http://img.shields.io/badge/Development%20sponsored%20by-dat-green.svg?style=flat)
 
-[![NPM](https://nodei.co/npm/knead.png?global=true)](https://nodei.co/npm/knead/)
-
 ```
 $ npm install -g knead
 ```
