@@ -45,7 +45,6 @@ KneadStream.prototype._transform = function (data, enc, next) {
 KneadStream.prototype.cli = function (tables, visual, push, next) {
   console.log(visual)
 
-  var tables = tables
   var older = tables[0]
   var newer = tables[1]
 
@@ -71,7 +70,6 @@ KneadStream.prototype.cli = function (tables, visual, push, next) {
       return next()
     }
     if (val === 'q' || val === 'quit') {
-      self.end()
       process.exit()
     } else {
       help()

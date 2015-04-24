@@ -1,6 +1,4 @@
-var dat = require('dat-core')
 var test = require('tape')
-var memdb = require('memdb')
 var diff = require('sorted-diff-stream')
 var DATA = require('test-data')
 var from = require('from2')
