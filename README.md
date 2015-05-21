@@ -20,6 +20,11 @@ You can send two files into `knead`. You'll see a [daff](https://github.com/paul
 $ knead <base-file> <changed-file> <resolved-file> [--format] [--limit]
 ```
 
+Stream from stdin to stdout:
+```
+$ knead -
+```
+
 `base-file`: also known as `local file`, this is the file that will work as the 'truth' for the diff
 
 `changed-file`: also known as `remote file`, this is the file that is proposing changes

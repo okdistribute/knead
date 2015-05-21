@@ -1,4 +1,4 @@
-var debug = require('debug')('dough')
+var debug = require('debug')('knead')
 var promptSync = require('prompt-sync')
 var Transform = require('stream').Transform
 var inherits = require('inherits')
@@ -56,14 +56,14 @@ KneadStream.prototype.cli = function (tables, visual, push, next) {
       return next()
     }
     if (val === 'y' || val === 'yes') {
-      for (var i in newer.data) {
+      for (var i = 0; i < newer.data.length; i++) {
         debug('pushing', newer.data[i])
         push(newer.data[i])
       }
       return next()
     }
     if (val === 'n' || val === 'no') {
-      for (i in older.data) {
+      for (var i = 0; i < newer.data.length; i++) {
         debug('pushing', older.data[i])
         push(older.data[i])
       }
