@@ -3,7 +3,6 @@
 var argv = require('minimist')(process.argv.slice(2))
 var detect = require('detect-data-stream')
 var formatData = require('format-data')
-var debug = require('debug')('knead-cli')
 var diff = require('sorted-diff-stream')
 var DaffStream = require('daff-stream')
 var fs = require('fs')
@@ -53,7 +52,6 @@ if (argv._[0] === '-') {
   var kneadStream = knead(diffStream, opts).pipe(formatData(format))
 
   kneadStream.on('data', function (data) {
-    debug('writing', data)
     outStream.write(data)
   })
 
