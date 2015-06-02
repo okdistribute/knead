@@ -4,7 +4,6 @@ var argv = require('minimist')(process.argv.slice(2))
 var detect = require('detect-data-stream')
 var formatData = require('format-data')
 var diff = require('sorted-diff-stream')
-var DaffStream = require('daff-stream')
 var fs = require('fs')
 var knead = require('./')
 
@@ -22,12 +21,9 @@ function jsonEquals (a, b, cb) {
   else cb(null, false)
 }
 
-var limit = (argv.limit || 20)
-
 var opts = {
-  limit: limit,
-  strategy: 'rows',
-  vizStream: DaffStream()
+  limit: argv.limit,
+  strategy: 'rows'
 }
 
 if (argv._[0] === '-') {
@@ -47,8 +43,8 @@ if (argv._[0] === '-') {
   var localStream = fs.createReadStream(localPath).pipe(detect())
   var newStream = fs.createReadStream(remotePath).pipe(detect())
   var outStream = fs.createWriteStream(outPath, {flags: 'a'})
-  var diffStream = diff(localStream, newStream, jsonEquals)
 
+  var diffStream = diff(localStream, newStream, jsonEquals)
   var kneadStream = knead(diffStream, opts).pipe(formatData(format))
 
   kneadStream.on('data', function (data) {

@@ -1,15 +1,15 @@
 var Batcher = require('byte-stream')
 var KneadStream = require('knead-stream')
+var diff2daff = require('diff2daff')
 
 module.exports = function (diffStream, opts, merge) {
-  if (!opts) opts = {}
+  if (!merge) {
+    merge = opts
+    opts = {}
+  }
   var limit = (opts.limit || 20) * 2
-  var batch = opts.batch || true
-  var vizStream = opts.vizStream
   var batchStream = Batcher(limit)
-  var kneadStream = KneadStream(merge)
+  var kneadStream = KneadStream(diff2daff, merge)
 
-  if (batch) diffStream = diffStream.pipe(batchStream)
-
-  return diffStream.pipe(vizStream).pipe(kneadStream)
+  return diffStream.pipe(batchStream).pipe(kneadStream)
 }

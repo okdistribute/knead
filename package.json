@@ -1,6 +1,6 @@
 {
   "name": "knead",
-  "version": "3.0.1",
+  "version": "3.0.2",
   "main": "index.js",
   "description": "Resolve streaming conflicts with manual merges.",
   "scripts": {
@@ -33,8 +33,8 @@
   "homepage": "https://github.com/karissa/knead",
   "dependencies": {
     "byte-stream": "^2.1.0",
-    "daff-stream": "^1.0.1",
     "detect-data-stream": "^1.0.0",
+    "diff2daff": "^1.0.0",
     "format-data": "^2.1.1",
     "from2": "^1.3.0",
     "knead-stream": "^1.0.1",
@@ -44,7 +44,7 @@
     "through2": "^0.6.5"
   },
   "devDependencies": {
-    "tape": "^4.0.0", 
+    "tape": "^4.0.0",
     "conflict-spectrum": "^1.0.2"
   }
 }
