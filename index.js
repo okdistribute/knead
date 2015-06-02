@@ -3,20 +3,19 @@ var promptSync = require('prompt-sync')
 var Transform = require('stream').Transform
 var inherits = require('inherits')
 var Batcher = require('byte-stream')
-var DaffStream = require('daff-stream')
 
 module.exports = function (diffStream, opts, merge) {
   if (!opts) opts = {}
   var limit = (opts.limit || 20) * 2
   var batch = opts.batch || true
+  var vizStream = opts.vizStream
 
   var batchStream = Batcher(limit)
-  var daffStream = DaffStream(opts.rowPath)
   var kneadStream = KneadStream(merge)
 
   if (batch) diffStream = diffStream.pipe(batchStream)
 
-  return diffStream.pipe(daffStream).pipe(kneadStream)
+  return diffStream.pipe(vizStream).pipe(kneadStream)
 }
 
 module.exports.KneadStream = KneadStream

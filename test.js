@@ -2,7 +2,7 @@ var test = require('tape')
 var diff = require('sorted-diff-stream')
 var DATA = require('conflict-spectrum')
 var from = require('from2')
-
+var DaffStream = require('daff-stream')
 var knead = require('./')
 
 var TABLES = DATA.CONFLICTS.SMALL
@@ -29,8 +29,11 @@ test('knead from sorted-diff-stream', function (t) {
   }
 
   var diffStream = diff(older, newer, jsonEquals)
-
-  knead(diffStream, { limit: 3 }, function (tables, visual, push, next) {
+  var opts = {
+    limit: 3,
+    vizStream: DaffStream()
+  }
+  knead(diffStream, opts, function (tables, visual, push, next) {
     var table1 = tables[0]
     var table2 = tables[1]
     console.log(visual)

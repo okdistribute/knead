@@ -5,6 +5,7 @@ var detect = require('detect-data-stream')
 var formatData = require('format-data')
 var debug = require('debug')('knead-cli')
 var diff = require('sorted-diff-stream')
+var DaffStream = require('daff-stream')
 var fs = require('fs')
 var knead = require('./')
 
@@ -26,7 +27,8 @@ var limit = (argv.limit || 20)
 
 var opts = {
   limit: limit,
-  strategy: 'rows'
+  strategy: 'rows',
+  vizStream: DaffStream()
 }
 
 if (argv._[0] === '-') {

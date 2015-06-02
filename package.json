@@ -33,7 +33,6 @@
   "homepage": "https://github.com/karissa/knead",
   "dependencies": {
     "byte-stream": "^2.1.0",
-    "daff": "^1.2.12",
     "daff-stream": "^1.0.1",
     "debug": "^2.1.3",
     "detect-data-stream": "^1.0.0",
