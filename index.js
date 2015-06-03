@@ -9,7 +9,8 @@ module.exports = function (diffStream, opts, merge) {
   }
   var limit = (opts.limit || 20) * 2
   var batchStream = Batcher(limit)
-  var kneadStream = KneadStream(diff2daff, merge)
+  var vizFn = opts.vizFn || diff2daff
+  var kneadStream = KneadStream(vizFn, merge)
 
   return diffStream.pipe(batchStream).pipe(kneadStream)
 }
