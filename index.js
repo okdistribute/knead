@@ -7,10 +7,8 @@ module.exports = function (diffStream, opts, merge) {
     merge = opts
     opts = {}
   }
-  var limit = (opts.limit || 20) * 2
-  var batchStream = Batcher(limit)
+  var batchStream = Batcher((opts.limit || 20) * 2)
   var vizFn = opts.vizFn || diff2daff
-  var manualMergeStream = manualMergeStream(vizFn, merge)
 
-  return diffStream.pipe(batchStream).pipe(manualMergeStream)
+  return diffStream.pipe(batchStream).pipe(manualMergeStream(vizFn, merge))
 }

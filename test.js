@@ -73,7 +73,10 @@ test('knead from sorted-diff-stream using the simple differ', function (t) {
   var diffStream = diff(older, newer, jsonEquals)
   var opts = {
     limit: 10,
-    vizFn: diffs2string
+    vizFn: function (changes, cb) {
+      visual = diffs2string(changes)
+      cb(changes, visual)
+    }
   }
 
   knead(diffStream, opts, function (tables, visual, push, next) {
