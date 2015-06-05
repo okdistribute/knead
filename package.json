@@ -44,7 +44,7 @@
     "through2": "^0.6.5"
   },
   "devDependencies": {
-    "conflict-spectrum": "^1.0.2",
+    "conflict-spectrum": "^2.0.0",
     "diffs-to-string": "^1.0.0",
     "tape": "^4.0.0"
   }
