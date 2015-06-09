@@ -6,7 +6,7 @@
 $ npm install -g knead
 ```
 
-##### Resolve Not Small Data conflicts with manual merges.
+##### Resolve data table conflicts one step at a time
 
 *Not Small Data.*  When data conflicts are sufficiently troubling to resolve manually.
 
