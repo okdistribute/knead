@@ -2,7 +2,7 @@
   "name": "knead",
   "version": "3.1.0",
   "main": "index.js",
-  "description": "Resolve streaming conflicts with manual merges.",
+  "description": "Resolve data table conflicts one step at a time.",
   "scripts": {
     "test": "standard && tape test.js"
   },
