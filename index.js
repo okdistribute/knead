@@ -6,7 +6,7 @@ module.exports = function (diffStream, opts, merge) {
   if (!opts) {
     opts = {}
   }
-  var limit = (opts.limit || 20) * 2
+  var limit = (opts.limit || 1) * 2
   var batchStream = Batcher(limit)
   var opts = {
     vizFn:  opts.vizFn || function (changes, cb) {

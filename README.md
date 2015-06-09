@@ -33,7 +33,7 @@ $ knead -
 
 `--format`: 'csv' (default). the data format to write to the resolved file. 'csv','json', or 'ndjson'
 
-`--limit`: 20 (default). the number of rows per page
+`--limit`: 1 (default). the number of rows per page
 
 ## Examples
 
