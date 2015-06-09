@@ -33,7 +33,7 @@ test('knead from sorted-diff-stream using daff-stream', function (t) {
   var diffStream = diff(older, newer, jsonEquals)
   var opts = {
     limit: 3,
-    visFn: diff2daff
+    vizFn: diff2daff
   }
 
   knead(diffStream, opts, function (tables, push, next) {

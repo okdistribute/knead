@@ -1,6 +1,6 @@
 var Batcher = require('byte-stream')
 var manualMergeStream = require('manual-merge-stream')
-var diff2daff = require('diff2daff')
+var diffs2string = require('diffs-to-string')
 
 module.exports = function (diffStream, opts, merge) {
   if (!opts) {
@@ -9,7 +9,9 @@ module.exports = function (diffStream, opts, merge) {
   var limit = (opts.limit || 20) * 2
   var batchStream = Batcher(limit)
   var opts = {
-    vizFn:  opts.vizFn || diff2daff,
+    vizFn:  opts.vizFn || function (changes, cb) {
+      cb(diffs2string(changes))
+    },
     merge: merge
   }
 
