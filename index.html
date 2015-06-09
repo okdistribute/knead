@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+
+  <meta charset="utf-8">
+  <title>karissa</title>
+  <meta name="description" content="Resolve data table conflicts in the terminal">
+  <meta name="author" content="karissa mckelvey">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
+
+  <link rel="stylesheet" href="/css/normalize.css">
+  <link rel="stylesheet" href="/css/skeleton.css">
+
+  <link rel="icon" type="image/png" href="/images/staging.png">
+
+  <!-- Twitter Card data -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="knead">
+  <meta name="twitter:title" content="knead">
+  <meta name="twitter:description" content="Resolve data table conflicts in the terminal">
+  <meta name="twitter:creator" content="@karissamck">
+  <!-- Open Graph data -->
+  <meta property="og:title" content="knead" />
+  <meta property="og:type" content="article" />
+  <meta property="og:url" content="http://karissa.github.io/knead" />
+  <meta property="og:image" content="" />
+  <meta property="og:description" content="Resolve data table conflicts in the terminal" />
+  </head>
+  <body>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div class="eleven columns" id="content">
+          <h1>knead</h1>
+          <h5>Resolve data table conflicts in the terminal</h5>
+          <pre><code>$ npm install -g knead</code></pre>
+          <hr>
+          <h3>scenario</h3>
+          <div class="row">
+            <div class="six columns">
+            <h5>You've got two hours left and you pull in some new data, and you see it. "OH NO..." you say. "I need to merge these two datasets... but <strong>EVIL OCTODATA</strong> got his hands on it! How will I ever get this done?"</h5>
+            <p>Is it a bird..?</p>
+            <h5>Is it a plane...?</h5>
+            <h3>Is it...</h3>
+            <h1>KNEAD?</h1>
+            </div>
+            <div class="six columns">
+            <img src="http://www.womenfitnessmag.com/wp-content/uploads/2015/03/International-Womens-Day-Gi.jpg" />
+            </div>
+          </div>
+          <hr>
+          <h1>"Don't panic, everyone. It's going to be ok."</h1>
+          <hr>
+
+          <h4>Step 1.</h4>
+          <p>Have two csv, tsv, or jsonlines files</p>
+<pre><code>$ ls
+cities.csv
+new_cities_data.json <-- this one was made incompatible by Evil Octodata</code></pre>
+
+          <br>
+
+          <h4>Step 2.</h4>
+          <p>Tell knead which one is the older (left) and which is newer (right). Specifi
+<pre><code>$ knead cities.csv new_cities_data.json out.csv --format=csv</code></pre>
+
+          <br>
+
+          <h4>Step 3.</h4>
+          <p>Knead will step through the datasets one page at a time, showing you the data diff as it goes. You can choose to keep one side or the other.</p>
+          <img src="/images/diff.png" />
+          <br><br>
+          <h4>Step 4.</h4>
+          <p>The changes you select will be output to out.csv. Groovy!</p>
+
+        </div>
+      </div>
+      <hr>
+      <div class="row">
+        <h6>Created by <a href="http://github.com/karissa">Karissa McKelvey</a>.</h6>
+        <h6> <a href="https://creativecommons.org/licenses/by-sa/3.0/us/">CC-BY-SA 3.0</a></h6>
+      </div>
+    </div>
+  </body>
+</html>
