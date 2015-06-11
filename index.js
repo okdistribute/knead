@@ -1,6 +1,5 @@
 var Batcher = require('byte-stream')
 var manualMergeStream = require('manual-merge-stream')
-var diffs2string = require('diffs-to-string')
 
 module.exports = function (diffStream, opts, merge) {
   if (!opts) {
