@@ -36,14 +36,12 @@ test('knead from sorted-diff-stream using daff-stream', function (t) {
     vizFn: diff2daff
   }
 
-  knead(diffStream, opts, function (tables, push, next) {
-    var table1 = tables[0]
-    var table2 = tables[1]
+  knead(diffStream, opts, function (diffs, visual, push, next) {
+    var cols = Object.keys(diffs[0][0])
+    var cols2 = Object.keys(diffs[0][1])
 
-    t.equals(table1.height, 4)
-    t.equals(table2.height, 4)
-    t.deepEquals(table1.columns, ['capital', 'country'])
-    t.deepEquals(table2.columns, ['capital', 'code', 'country'])
+    t.deepEquals(cols, ['country', 'capital'])
+    t.deepEquals(cols2, ['country', 'code', 'capital'])
     t.same(typeof next, 'function')
     t.end()
   })

@@ -9,9 +9,7 @@ module.exports = function (diffStream, opts, merge) {
   var limit = (opts.limit || 1) * 2
   var batchStream = Batcher(limit)
   var opts = {
-    vizFn:  opts.vizFn || function (changes, cb) {
-      cb(diffs2string(changes))
-    },
+    vizFn:  opts.vizFn,
     merge: merge
   }
 
